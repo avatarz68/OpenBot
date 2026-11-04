@@ -180,7 +180,7 @@ pulled. Anything other than `sha256:` and 64 hex characters is refused at instal
 
 ### Your own tenant package
 
-The tenant package is a directory (`config.tenantPackageDir`, `/app/examples/fintech` by default).
+The tenant package is a directory (`config.tenantPackageDir`, `/app/examples/impppact` by default).
 To run your own without building an image, put its files in a ConfigMap and mount it with
 `config.extraVolumes` and `config.extraVolumeMounts`. They reach the server and the routines and
 computer-culler CronJobs, the pods that load the package, so the package is the same wherever it is

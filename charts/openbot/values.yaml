@@ -164,7 +164,7 @@ config:
     okta:
       clientId: ""
       issuer: ""
-  tenantPackageDir: /app/examples/fintech
+  tenantPackageDir: /app/examples/impppact
 
   # CopilotKit Intelligence, which OpenBot requires. All four values are needed together: the server
   # refuses to start on a partial set, deliberately, because a half-configured Intelligence is a

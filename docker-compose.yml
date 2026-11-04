@@ -139,6 +139,9 @@ services:
       OPENAI_BASE_URL: ${OPENAI_CONTAINER_BASE_URL:-${OPENAI_BASE_URL:-}}
       # `local` runs the platform embedded in the server, with no CopilotKit service. The browser
       # then reaches it through the server's own port, at `OPENBOT_PUBLIC_URL`'s address.
+      # The tenant package the server loads: the Bots, channels and product name. The image's app
+      # bundle was built for the package named by its `TENANT_PACKAGE_DIR` build argument.
+      TENANT_PACKAGE_DIR: ${TENANT_PACKAGE_DIR:-../examples/impppact}
       INTELLIGENCE_MODE: ${INTELLIGENCE_MODE:-}
       LOCAL_PLATFORM_PORT: ${LOCAL_PLATFORM_PORT:-}
       OPENBOT_PUBLIC_URL: ${OPENBOT_PUBLIC_URL:-}

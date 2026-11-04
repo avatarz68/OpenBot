@@ -55,6 +55,12 @@ Die gehosteten Einstellungen (`INTELLIGENCE_API_URL`, `INTELLIGENCE_GATEWAY_WS_U
 - Das Self-Host-Banner und die Onboarding-Seite „Deploy it for your organization“ (mit Link zum CopilotKit-Vertrieb) sind im lokalen Modus ausgeblendet. Der Code dazu liegt weiter in `app/src/components/layout/self-host-banner.tsx`.
 - `README.openbot.md`, `docs/` und die Helm-Charts beschreiben den Upstream-Betrieb.
 
+## Docker und Kubernetes
+
+- **Image:** Das Image baut die App mit dem Mandanten aus dem Build-Argument `TENANT_PACKAGE_DIR` (Standard `../examples/impppact`). Darin stecken Produktname und Standardsprache. Ein anderer Mandant: `--build-arg TENANT_PACKAGE_DIR=../examples/<name>`. Ein lokaler Produktions-Build mit dieser Einstellung enthält „ImPPPactBot“ und `defaultLocale: "de"`.
+- **Compose:** `docker-compose.yml` gibt `TENANT_PACKAGE_DIR` (Standard `impppact`), `INTELLIGENCE_MODE`, `LOCAL_PLATFORM_PORT` und `OPENBOT_PUBLIC_URL` an den Server weiter.
+- **Helm:** Der Standardmandant im Chart ist `impppact`. **Der lokale Modus ist im Chart noch nicht eingebaut.** `templates/validation.yaml` und `templates/secret.yaml` verlangen weiterhin `config.intelligence.*` und `secrets.intelligenceApiKey`, und die Umgebung des Servers kennt `INTELLIGENCE_MODE` nicht. Nötig ist: ein Wert `config.intelligence.mode`, die beiden Prüfungen nur ohne `local` und die Umgebungsvariable `INTELLIGENCE_MODE=local` im gemeinsamen Env-Block (`templates/_helpers.tpl`). Ich habe das nicht geändert, weil in der Sitzung kein `helm` zum Rendern und Prüfen zur Verfügung stand.
+
 ## Tests
 
 ```bash
@@ -70,5 +76,5 @@ bun test server/tests/local-platform.test.ts \
 ## Noch nicht geprüft
 
 - Ein Durchlauf mit einem echten Sprachmodell.
-- Der Betrieb über Docker Compose und Helm mit `OPENBOT_PUBLIC_URL` hinter einem Reverse-Proxy. Die Weiterleitung ist getestet, ein Start mit Compose in dieser Sitzung nicht (kein Docker).
+- Der Betrieb über Docker Compose mit `OPENBOT_PUBLIC_URL` hinter einem Reverse-Proxy. Die Weiterleitung ist getestet, ein Image-Build und ein Start mit Compose in dieser Sitzung nicht (kein Docker).
 - Mehrere Personen gleichzeitig.
