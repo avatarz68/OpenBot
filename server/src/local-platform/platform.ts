@@ -462,9 +462,19 @@ export function createLocalPlatform(
             ingestThread: new Map(),
           };
         }
+        // A browser only accepts a subprotocol it asked for, and Phoenix's browser client asks for
+        // none; the Node client in the runner is the one that expects "phoenix" back.
+        const requested = request.headers.get("sec-websocket-protocol");
         const upgraded = server.upgrade(request, {
           data,
-          headers: { "Sec-WebSocket-Protocol": "phoenix" },
+          ...(requested
+            ? {
+                headers: {
+                  "Sec-WebSocket-Protocol":
+                    requested.split(",")[0]?.trim() ?? "phoenix",
+                },
+              }
+            : {}),
         });
         return upgraded
           ? undefined
