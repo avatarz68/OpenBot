@@ -443,11 +443,14 @@ INFO="$(curl -fsS --max-time 8 "http://localhost:$SERVER_PORT/api/copilotkit/inf
 # machine has. On Windows `python3` is usually the Microsoft Store alias, which prints "Python was not
 # found" and exits 49, so the run stopped here with the server and worker up and the app never
 # started.
-bun run - "$INFO" <<'JS'
+PLATFORM_MODE="$(setting INTELLIGENCE_MODE "")"
+bun run - "$INFO" "$PLATFORM_MODE" <<'JS'
 const info = JSON.parse(process.argv[2]);
 const status = info.licenseStatus;
+// With the embedded platform there is no CopilotKit licence to be valid; the Bots are the check.
+const local = process.argv[3] === "local";
 const agents = Object.keys(info.agents ?? {});
-if (status !== "valid") {
+if (!local && status !== "valid") {
   console.log(`\x1b[31m  licence is '${status}', not 'valid'.\x1b[0m`);
   console.log("\x1b[31m  Check CPK_INTELLIGENCE_API_KEY (or INTELLIGENCE_API_KEY): npx copilotkit@latest login && npx copilotkit@latest project select\x1b[0m");
   console.log("\x1b[31m  See README.md for Intelligence setup.\x1b[0m");
@@ -457,7 +460,7 @@ if (agents.length === 0) {
   console.log("\x1b[31m  No Bots registered.\x1b[0m");
   process.exit(1);
 }
-console.log(`\x1b[32m  licence valid · mode ${info.mode} · Bots: ${agents.join(", ")}\x1b[0m`);
+console.log(`\x1b[32m  ${local ? "local platform" : "licence valid"} · mode ${info.mode} · Bots: ${agents.join(", ")}\x1b[0m`);
 JS
 
 info "4/4  App"

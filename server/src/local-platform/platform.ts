@@ -116,7 +116,15 @@ export function createLocalPlatform(
 
     if (url.pathname === "/api/entitlements/runtime" && method === "GET")
       // No memory, learning or trajectories: OpenBot falls back to its own stores.
-      return json({ entitlements: {}, features: [] });
+      return json({
+        status: "ready",
+        entitlement: {
+          active: false,
+          source: "selfHostedDeploymentLicense",
+          features: {},
+          limits: {},
+        },
+      });
 
     if (segments[0] !== "api" || segments[1] !== "threads") return notFound();
 
@@ -255,6 +263,7 @@ export function createLocalPlatform(
       const url = new URL(request.url);
       if (
         url.pathname === "/runner/websocket" ||
+        url.pathname === "/client/websocket" ||
         url.pathname === "/socket/websocket"
       ) {
         const upgraded = server.upgrade(request, {
@@ -276,10 +285,14 @@ export function createLocalPlatform(
         const [joinRef, ref, topic, event, payload] = JSON.parse(
           String(raw),
         ) as Frame;
-        const reply = (status: "ok" | "error", response: unknown = {}) =>
+        const reply = (
+          status: "ok" | "error",
+          response: unknown = {},
+        ): void => {
           socket.send(
             frame(joinRef, ref, topic, "phx_reply", { status, response }),
           );
+        };
 
         if (topic === "phoenix") return reply("ok");
 

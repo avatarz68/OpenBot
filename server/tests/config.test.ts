@@ -87,6 +87,7 @@ describe("deployment configuration", () => {
     expect(config.runtime).toEqual({
       mode: "intelligence",
       durableHistory: true,
+      platform: "hosted",
       intelligence: {
         apiUrl: "http://localhost:7100",
         gatewayWsUrl: "ws://localhost:7103",

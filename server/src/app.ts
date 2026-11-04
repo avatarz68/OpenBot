@@ -514,6 +514,8 @@ export function createApp(
     context.json({
       mode: config.runtime.mode,
       durableHistory: config.runtime.durableHistory,
+      // "hosted" or "local": whether threads live in CopilotKit's service or in this deployment.
+      platform: config.runtime.platform,
       /*
        * Whether a Bot may answer with an interface it wrote itself.
        *

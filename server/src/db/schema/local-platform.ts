@@ -30,7 +30,9 @@ export const localThreads = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [index("local_threads_user_idx").on(table.userId, table.updatedAt)],
+  (table) => [
+    index("local_threads_user_idx").on(table.userId, table.updatedAt),
+  ],
 );
 
 /** One AG-UI event per row, in arrival order. The message history is folded from these. */
@@ -44,7 +46,9 @@ export const localThreadEvents = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [index("local_thread_events_thread_idx").on(table.threadId, table.seq)],
+  (table) => [
+    index("local_thread_events_thread_idx").on(table.threadId, table.seq),
+  ],
 );
 
 /** At most one live run per thread. */

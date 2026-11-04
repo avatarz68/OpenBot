@@ -4,11 +4,11 @@
  * boot boundary.
  */
 import { intelligenceApiKey } from "@openbot/shared/intelligence-key";
-import { listenPort } from "@openbot/shared/listen-port";
 import {
   isLearningContainerId,
   type LearningTarget,
 } from "@openbot/shared/learning";
+import { listenPort } from "@openbot/shared/listen-port";
 import {
   BROWSER_ABSENT_ENV,
   BROWSER_URL_ENV,
@@ -37,7 +37,26 @@ export type RuntimeCapabilities = {
   mode: "intelligence";
   durableHistory: true;
   intelligence: IntelligenceSettings;
+  /**
+   * Who answers the Intelligence contract. `hosted` is CopilotKit's service; `local` is the platform
+   * embedded in this server (src/local-platform), chosen with `INTELLIGENCE_MODE=local`. The runtime
+   * is in Intelligence mode either way, which is why `mode` does not change.
+   */
+  platform: "hosted" | "local";
+  /** Present when `platform` is `local`: where the embedded platform listens, on loopback only. */
+  localPlatform?: { port: number };
 };
+
+/** The port the embedded local platform listens on unless `LOCAL_PLATFORM_PORT` says otherwise. */
+export const DEFAULT_LOCAL_PLATFORM_PORT = 4390;
+
+/** A key the embedded platform and the runtime share, derived so it survives restarts unconfigured. */
+function localPlatformKey(environment: Environment): string {
+  const secret = optional(environment, "KEY_ENCRYPTION_KEY") ?? "";
+  return new Bun.CryptoHasher("sha256")
+    .update(`local-platform:${secret}`)
+    .digest("hex");
+}
 
 /**
  * The Intelligence contract. Three values are required; see runtimeCapabilities.
@@ -1164,6 +1183,28 @@ function oktaAuth(
  * deployment sets one, which is what a self-hosted Intelligence with its own licence needs.
  */
 function runtimeCapabilities(environment: Environment): RuntimeCapabilities {
+  if (optional(environment, "INTELLIGENCE_MODE") === "local") {
+    const portValue = optional(environment, "LOCAL_PLATFORM_PORT");
+    const port = portValue ? Number(portValue) : DEFAULT_LOCAL_PLATFORM_PORT;
+    if (!Number.isInteger(port) || port < 1 || port > 65535)
+      throw new Error("LOCAL_PLATFORM_PORT must be a port number");
+    const browserGatewayWsUrl = url(
+      environment,
+      "INTELLIGENCE_BROWSER_GATEWAY_WS_URL",
+    );
+    return {
+      mode: "intelligence",
+      durableHistory: true,
+      platform: "local",
+      localPlatform: { port },
+      intelligence: {
+        apiUrl: `http://127.0.0.1:${port}`,
+        gatewayWsUrl: `ws://127.0.0.1:${port}/runner`,
+        apiKey: localPlatformKey(environment),
+        ...(browserGatewayWsUrl ? { browserGatewayWsUrl } : {}),
+      },
+    };
+  }
   const settings = {
     apiUrl: url(environment, "INTELLIGENCE_API_URL"),
     gatewayWsUrl: url(environment, "INTELLIGENCE_GATEWAY_WS_URL"),
@@ -1201,6 +1242,7 @@ function runtimeCapabilities(environment: Environment): RuntimeCapabilities {
   return {
     mode: "intelligence",
     durableHistory: true,
+    platform: "hosted",
     intelligence: {
       ...(settings as IntelligenceSettings),
       ...(browserGatewayWsUrl ? { browserGatewayWsUrl } : {}),
@@ -1480,6 +1522,8 @@ function generativeUiEnabled(environment: Environment): boolean {
 
 /** Same rule as generated interfaces: on unless explicitly "false" or "0". */
 function selfHostBannerEnabled(environment: Environment): boolean {
+  // The embedded platform is the self-hosted setup; there is nothing left to offer help with.
+  if (optional(environment, "INTELLIGENCE_MODE") === "local") return false;
   const value = optional(environment, "OPENBOT_SELF_HOST_BANNER");
   return value !== "false" && value !== "0";
 }
@@ -1668,6 +1712,8 @@ export function loadConfig(
  * environment is a choice, so there is nothing to assign.
  */
 function learningAutoAssignEnabled(environment: Environment): boolean {
+  // The embedded platform has no Learning containers to assign.
+  if (optional(environment, "INTELLIGENCE_MODE") === "local") return false;
   if (optional(environment, "CPK_INTELLIGENCE_LEARNING_CONTAINER_ID"))
     return false;
   const value = optional(environment, "OPENBOT_LEARNING_AUTO_ASSIGN");

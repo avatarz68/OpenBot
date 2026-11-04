@@ -1,7 +1,10 @@
 import { afterAll, describe, expect, test } from "bun:test";
 import { createDatabase } from "../src/db/client";
 import { PostgresThreadStore } from "../src/local-platform/postgres-store";
-import { MemoryThreadStore, type ThreadStore } from "../src/local-platform/store";
+import {
+  MemoryThreadStore,
+  type ThreadStore,
+} from "../src/local-platform/store";
 import { TEST_POOL, testDatabaseUrl } from "./support/database";
 
 const database = createDatabase(testDatabaseUrl(), TEST_POOL);

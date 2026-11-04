@@ -208,6 +208,7 @@ import {
   createLearningSharingStore,
   createOpenSkillIndex,
 } from "./learning/sharing";
+import { startLocalPlatform } from "./local-platform/serve";
 import { createMemoryDefaults } from "./memory/defaults";
 import { createMemoryIngestion } from "./memory/ingestion";
 import { createIntelligenceMemory } from "./memory/intelligence";
@@ -307,6 +308,10 @@ import { repeatAfterEach } from "./work/loop";
 import { createWorkQueue, type WorkOfferedListener } from "./work/queue";
 
 const config = loadConfig();
+// The embedded platform means no CopilotKit service is involved, so none is told about this
+// deployment either. The runtime reads this once, when it is built below.
+if (config.runtime.platform === "local")
+  process.env.COPILOTKIT_TELEMETRY_DISABLED = "true";
 // The environment seeds local policy once. The SDK fallback must not reapply an old revision
 // after an administrator clears a pin to follow the latest published Skills.
 clearLearningRevisionFallback();
@@ -314,6 +319,15 @@ clearLearningRevisionFallback();
 // `serverPort` in config.ts for what `process.env.PORT ?? …` did with `PORT=` instead.
 const port = config.port;
 const database = createDatabase(config.databaseUrl);
+// Without CopilotKit Intelligence the runtime talks to a platform embedded in this process. It is
+// listening before anything below builds an Intelligence client, which opens nothing until used.
+if (config.runtime.platform === "local" && config.runtime.localPlatform) {
+  startLocalPlatform({
+    database,
+    port: config.runtime.localPlatform.port,
+    apiKey: config.runtime.intelligence.apiKey,
+  });
+}
 const productTelemetry = await createProductTelemetry({
   privacyKey: config.keyEncryptionKey,
   deploymentId: config.deploymentId,
