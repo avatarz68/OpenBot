@@ -38,3 +38,19 @@ Each phase must leave `bun run test` green and the product startable.
 - About 100 tests mention CopilotKit; many use recorded Intelligence traffic fixtures.
 - Upstream updates from the original project become hard to merge after phase 2.
 - Phase 1 should be reviewed before anything else is built on it.
+
+## Revised approach (after reading the SDK)
+
+`@copilotkit/runtime` and `@copilotkit/react-core` are MIT-licensed, so they stay. Only the hosted
+Intelligence service is replaced, by an **embedded local platform** in `server/src/local-platform/`
+that speaks the same wire format (REST under `/api/threads` plus the Phoenix WebSocket for
+`ingestion:<runId>` and `thread:<id>`). OpenBot's own code then needs no second code path.
+
+Done: in-memory `ThreadStore`, message history folded from the event log, thread lock, runner
+WebSocket, no entitlements (memory stays in OpenBot's database). Tested with the real
+`CopilotKitIntelligence` client (`server/tests/local-platform.test.ts`).
+
+Open: PostgreSQL `ThreadStore`; mount in `server/src/index.ts` with `INTELLIGENCE_MODE=local`
+(config must stop demanding the three Intelligence settings); browser gateway for the live
+`CopilotChat` connection; learning and trajectories switched off cleanly; an end-to-end run with a
+mock model; the Mem0 decision is dropped because OpenBot already keeps memory itself.
