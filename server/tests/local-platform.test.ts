@@ -341,3 +341,32 @@ test("a browser replays history, follows a live run and can stop it", async () =
 
   for (const s of [runner, viewer, resumed, live]) s.socket.close();
 });
+
+test("a thread is free again as soon as its run ends, however it ended", async () => {
+  await client.getOrCreateThread({ threadId: "t6", userId: "a", agentId: "x" });
+  await client.ɵacquireThreadLock({
+    threadId: "t6",
+    runId: "r1",
+    userId: "a",
+    agentId: "x",
+  });
+  const runner = await openSocket("/runner/websocket");
+  runner.send(["1", "1", "ingestion:r1", "phx_join", { thread_id: "t6" }]);
+  runner.send([
+    "1",
+    "2",
+    "ingestion:r1",
+    "event",
+    { type: "RUN_FINISHED", threadId: "t6", runId: "r1" },
+  ]);
+  await runner.until((f) => f.length >= 2);
+  // No explicit release: the end of the run is enough.
+  const next = await client.ɵacquireThreadLock({
+    threadId: "t6",
+    runId: "r2",
+    userId: "a",
+    agentId: "x",
+  });
+  expect(next.runId).toBe("r2");
+  runner.socket.close();
+});

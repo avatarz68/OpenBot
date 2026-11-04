@@ -163,6 +163,15 @@ export function createLocalPlatform(
       await store.updateThread(threadId, {
         lastRunAt: new Date(now()).toISOString(),
       });
+    // A run that has finished, failed or been stopped no longer holds the thread. The runtime also
+    // asks for the lock to be cleared, but not on every path (a stop does not), and a lock left
+    // behind refuses the person's next message until it expires.
+    const ended = events.filter(isTerminal).map((event) => event.runId);
+    if (ended.length > 0) {
+      const held = await store.lock(threadId);
+      if (held && ended.includes(held.runId))
+        await store.setLock(threadId, undefined);
+    }
     for (const viewer of viewers.get(threadId) ?? []) {
       for (const event of events) {
         if (viewer.replaying) viewer.buffer.push(event);
