@@ -33,6 +33,7 @@ import {
 } from "@/lib/channels/queries";
 import { useChannelEvents } from "@/lib/channels/use-channel-events";
 import { appConfig } from "@/lib/generated/application-config";
+import { t } from "@/lib/i18n";
 import { EASE_OUT, ENTRANCE_SECONDS } from "@/lib/motion";
 import { navigationFor } from "@/lib/navigation";
 import { relativeTimeShort } from "@/lib/relative-time";
@@ -233,7 +234,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               )}
             />
             <Button
-              aria-label="New conversation"
+              aria-label={t("New conversation")}
               size="icon"
               variant="ghost"
               render={(props) => (
@@ -257,9 +258,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuItem>
               <InputGroup className="bg-background text-sm rounded-lg h-9">
                 <InputGroupInput
-                  aria-label="Search conversations"
+                  aria-label={t("Search conversations")}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search…"
+                  placeholder={t("Search…")}
                   value={search}
                 />
                 <InputGroupAddon>
@@ -280,13 +281,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <EmptyHeader>
                     <EmptyTitle>
                       {channels.hasNextPage
-                        ? "No loaded conversations match your search"
-                        : "No conversations match your search"}
+                        ? t("No loaded conversations match your search")
+                        : t("No conversations match your search")}
                     </EmptyTitle>
                     <EmptyDescription className="text-pretty">
                       {channels.hasNextPage
-                        ? "Load older conversations to search more of your history."
-                        : `No conversation has “${search.trim()}” in its name or latest message.`}
+                        ? t(
+                            "Load older conversations to search more of your history.",
+                          )
+                        : t(
+                            "No conversation has “{search}” in its name or latest message.",
+                            { search: search.trim() },
+                          )}
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
@@ -296,9 +302,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <div className="py-4">
                 <Empty className="border border-dashed min-h-[40dvh]">
                   <EmptyHeader>
-                    <EmptyTitle>No conversations yet</EmptyTitle>
+                    <EmptyTitle>{t("No conversations yet")}</EmptyTitle>
                     <EmptyDescription className="text-pretty">
-                      Start a conversation with a Bot and it shows up here.
+                      {t(
+                        "Start a conversation with a Bot and it shows up here.",
+                      )}
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
@@ -386,7 +394,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   variant="destructive"
                 >
                   <IconLogout />
-                  Sign out
+                  {t("Sign out")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

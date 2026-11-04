@@ -35,6 +35,7 @@ import {
   mediaTypeOf,
   shouldClaimPaste,
 } from "@/lib/channels/attachments";
+import { t } from "@/lib/i18n";
 import { newId } from "@/lib/new-id";
 import { cn } from "@/lib/utils";
 import { Button } from "../../ui/button";
@@ -1334,7 +1335,7 @@ export function Composer({
    * the two it is about to do. "Send" on a button that will not send for another minute is a small
    * lie told to exactly the people who cannot see the queue it lands in.
    */
-  const sendLabel = parking ? "Queue message" : "Send message";
+  const sendLabel = parking ? t("Queue message") : t("Send message");
   const callAction =
     draft.isEmpty && draft.attachments.length === 0 ? voiceCall : undefined;
   const actionClassName = cn(
@@ -1343,7 +1344,7 @@ export function Composer({
   );
   const primaryAction = canStop ? (
     <Button
-      aria-label="Stop the Bot"
+      aria-label={t("Stop the Bot")}
       className={actionClassName}
       data-slot="composer-stop"
       data-testid="composer-stop"
@@ -1355,13 +1356,15 @@ export function Composer({
     </Button>
   ) : callAction ? (
     <Button
-      aria-label={callAction.active ? "Show voice call" : "Start voice call"}
+      aria-label={
+        callAction.active ? t("Show voice call") : t("Start voice call")
+      }
       title={
         callAction.supported
           ? callAction.active
-            ? "Show voice call"
-            : "Call this Bot"
-          : "Voice calls need a microphone and a secure (HTTPS) connection"
+            ? t("Show voice call")
+            : t("Call this Bot")
+          : t("Voice calls need a microphone and a secure (HTTPS) connection")
       }
       className={actionClassName}
       disabled={disabled || dictation.busy || !callAction.supported}
@@ -1521,7 +1524,7 @@ export function Composer({
             <div className="flex items-center gap-3">
               {attachmentsEnabled ? (
                 <Button
-                  aria-label="Attach a file"
+                  aria-label={t("Attach a file")}
                   className="self-end"
                   data-slot="composer-attach"
                   // The button stays, and stays labelled: a conversation that cannot take another
@@ -1537,7 +1540,7 @@ export function Composer({
                 </Button>
               ) : (
                 <Button
-                  aria-label="More message options unavailable"
+                  aria-label={t("More message options unavailable")}
                   className="self-end disabled:opacity-100"
                   disabled
                   size="icon"
@@ -1550,7 +1553,7 @@ export function Composer({
               {/* The slot is ours: `PromptArea` passes no attribute through to its own box. */}
               <div className="min-w-0 flex-1" data-slot="composer-input">
                 <PromptArea
-                  aria-label="Message"
+                  aria-label={t("Message")}
                   className={cn(
                     "w-full border-0 bg-transparent p-0 text-sm shadow-none",
                     editorClassName,
@@ -1561,7 +1564,7 @@ export function Composer({
                   onChange={handleChange}
                   onImagePaste={canAttach ? stagePastedImage : undefined}
                   onSubmit={submitDraft}
-                  placeholder="Ask anything"
+                  placeholder={t("Ask anything")}
                   ref={promptAreaRef}
                   triggers={triggers}
                   value={value}
@@ -1610,7 +1613,7 @@ export function Composer({
             />
             <div data-slot="composer-input">
               <PromptArea
-                aria-label="Message"
+                aria-label={t("Message")}
                 autoGrow
                 className={cn(
                   "w-full border-0 bg-transparent p-0 text-sm shadow-none",
@@ -1621,7 +1624,7 @@ export function Composer({
                 onChange={handleChange}
                 onImagePaste={canAttach ? stagePastedImage : undefined}
                 onSubmit={submitDraft}
-                placeholder="Ask anything"
+                placeholder={t("Ask anything")}
                 ref={promptAreaRef}
                 triggers={triggers}
                 value={value}
@@ -1632,7 +1635,7 @@ export function Composer({
           <div className="flex items-center justify-between">
             {attachmentsEnabled ? (
               <Button
-                aria-label="Attach a file"
+                aria-label={t("Attach a file")}
                 className="size-7 rounded-full p-0"
                 data-slot="composer-attach"
                 disabled={disabled}

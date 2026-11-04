@@ -21,6 +21,7 @@ import { type AgentProfile, agentListQueryOptions } from "@/lib/agents/queries";
 import { currentUserQueryOptions, needsOnboarding } from "@/lib/auth/queries";
 import { deploymentCapabilitiesQueryOptions } from "@/lib/deployment/queries";
 import { appConfig } from "@/lib/generated/application-config";
+import { t } from "@/lib/i18n";
 import { completeOnboardingMutationOptions } from "@/lib/onboarding/mutations";
 import { cn } from "@/lib/utils";
 import { queryClient } from "@/query-client";
@@ -42,7 +43,7 @@ function WelcomeStep() {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h1 className="text-3xl font-semibold tracking-tight max-w-md text-center">
-        Welcome to {appConfig.brand.productName}
+        {t("Welcome to {name}", { name: appConfig.brand.productName })}
       </h1>
       <div className="h-8" />
       <IllustrationFrame
@@ -71,7 +72,7 @@ function WelcomeStep() {
             compact
             className="scale-90"
             editorClassName="text-base"
-            initialValue="Hand off tasks to your team of Bots"
+            initialValue={t("Hand off tasks to your team of Bots")}
           />
         </div>
       </IllustrationFrame>
@@ -83,7 +84,7 @@ function ComputerUseStep() {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h1 className="text-3xl font-semibold tracking-tight max-w-md text-center">
-        Each Bot has its own browser and files
+        {t("Each Bot has its own browser and files")}
       </h1>
       <div className="h-8" />
       <div className="relative aspect-5/3 w-full max-w-lg rounded-2xl overflow-hidden border border-border">
@@ -132,7 +133,7 @@ function RosterStep() {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h1 className="text-3xl font-semibold tracking-tight max-w-md text-center">
-        Pick a Bot or make your own
+        {t("Pick a Bot or make your own")}
       </h1>
       <div className="h-8" />
       <IllustrationFrame
@@ -161,7 +162,7 @@ function RosterStep() {
         <div className="bg-card p-4 rounded-lg flex flex-row gap-4 items-center">
           <div className="rounded-full size-[40px] border border-foreground/30 border-dashed" />
           <h3 className="line-clamp-1 text-base font-medium tracking-tight text-foreground/70">
-            Your own Bot
+            {t("Your own Bot")}
           </h3>
         </div>
       </IllustrationFrame>
@@ -180,7 +181,7 @@ function LocalStep() {
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h1 className="text-3xl font-semibold tracking-tight max-w-md text-center">
-        It runs on your machine
+        {t("It runs on your machine")}
       </h1>
       {/*
        * "Stored", and the model named, because "your data never leaves" would be untrue: every turn
@@ -273,19 +274,19 @@ function Introduction({ localEvaluation }: { localEvaluation: boolean }) {
         { id: "welcome", label: "Welcome", content: <WelcomeStep /> },
         {
           id: "computer",
-          label: "Each Bot has its own browser and files",
+          label: t("Each Bot has its own browser and files"),
           content: <ComputerUseStep />,
         },
         {
           id: "roster",
-          label: "Pick a Bot or make your own",
+          label: t("Pick a Bot or make your own"),
           content: <RosterStep />,
         },
         ...(localEvaluation
           ? [
               {
                 id: "local",
-                label: "It runs on your machine",
+                label: t("It runs on your machine"),
                 content: <LocalStep />,
               },
               {
@@ -399,14 +400,14 @@ function RouteComponent() {
               {capabilitiesError && !capabilities ? (
                 <div className="mt-4 text-center">
                   <p className="text-sm text-destructive" role="alert">
-                    We couldn't load your setup. Try again to continue.
+                    {t("We couldn't load your setup. Try again to continue.")}
                   </p>
                   <Button
                     variant="ghost"
                     disabled={loadingCapabilities}
                     onClick={() => retryCapabilities()}
                   >
-                    Try again
+                    {t("Try again")}
                   </Button>
                 </div>
               ) : null}
@@ -435,7 +436,7 @@ function RouteComponent() {
                     }
                     size="lg"
                   >
-                    Continue
+                    {t("Continue")}
                   </Button>
                 )}
                 {step !== "intro" && (
@@ -453,7 +454,7 @@ function RouteComponent() {
                     variant="secondary"
                     size="lg"
                   >
-                    Back
+                    {t("Back")}
                   </Button>
                 )}
               </motion.div>

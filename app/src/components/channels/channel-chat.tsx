@@ -48,6 +48,8 @@ import { repairUnansweredToolCalls } from "@/lib/copilot/repair-history";
 import { releaseServerOwnedInterrupts } from "@/lib/copilot/server-owned-interrupts";
 import { stoppedReason } from "@/lib/copilot/stopped-turn";
 import { readThreadMessages } from "@/lib/copilot/thread-messages";
+import { t } from "@/lib/i18n";
+import { chatLabels } from "@/lib/i18n/chat-labels";
 import { useSkillCommands } from "@/lib/plugins/skill-commands";
 import {
   askChannelAgent,
@@ -80,7 +82,7 @@ const JOIN_DEADLINE_MS = 1500;
 const SEND_WITHOUT_RUNTIME_AFTER_MS = 1500;
 
 /** What a turn that never left the browser says, with the person's words back in the box. */
-const NOT_SENT = "Your message wasn't sent. Try again.";
+const NOT_SENT = t("Your message wasn't sent. Try again.");
 
 type ChannelActivitySignature = {
   agentId: string;
@@ -164,12 +166,16 @@ export function channelHistoryNotice({
     historyAvailability === "unavailable" &&
     (historyReadFailed || (messageCount === 0 && lastMessageAt !== null))
   ) {
-    return "Couldn't load earlier messages. You can keep using this conversation.";
+    return t(
+      "Couldn't load earlier messages. You can keep using this conversation.",
+    );
   }
 
   if (unreadable > 0) {
     return unreadable === 1
-      ? "One earlier message couldn't be read, so it isn't shown. Everything else is here."
+      ? t(
+          "One earlier message couldn't be read, so it isn't shown. Everything else is here.",
+        )
       : `${unreadable} earlier messages couldn't be read, so they aren't shown. Everything else is here.`;
   }
 
@@ -314,7 +320,7 @@ export function toMessageContent(
 function describeAttachments(attachments: readonly Attachment[]): string {
   if (attachments.length === 1) {
     const { filename } = uploadedAttachment(attachments[0]);
-    return filename ? `Sent ${filename}` : "Sent an attachment";
+    return filename ? `Sent ${filename}` : t("Sent an attachment");
   }
   return `Sent ${attachments.length} attachments`;
 }
@@ -1086,6 +1092,7 @@ export function ChannelChat({
     // channel instance so an action continues this thread instead of looking for a default agent.
     <CopilotChatConfigurationProvider
       agentId={localAgentId}
+      labels={chatLabels()}
       threadId={channel.threadId}
     >
       <ConversationProvider ask={askFromComponent}>
@@ -1156,7 +1163,7 @@ export function ChannelChat({
                 />
                 {voiceArchive.error && (
                   <p className="pb-2 text-sm text-destructive" role="alert">
-                    Couldn’t load voice chats. Reload the page.
+                    {t("Couldn’t load voice chats. Reload the page.")}
                   </p>
                 )}
                 {voiceContextNotice && (

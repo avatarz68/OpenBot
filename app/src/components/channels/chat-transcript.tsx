@@ -9,6 +9,7 @@ import {
   readConnectPrompt,
   SHOW_APP_ACCESS_TOOL,
 } from "@openbot/shared/connect-prompt";
+import { readToolName } from "@openbot/shared/tool-name";
 import {
   IconAlertTriangle,
   IconBox,
@@ -64,18 +65,18 @@ import type { CardPlace } from "@/lib/copilot/carry-on";
 import { foreignCodingCall } from "@/lib/copilot/coding-calls";
 import { ToolPlaceContext } from "@/lib/copilot/tool-place";
 import { deploymentCapabilitiesQueryOptions } from "@/lib/deployment/queries";
+import { t } from "@/lib/i18n";
 import { markdownComponents, markdownPlugins } from "@/lib/markdown";
 import { EASE_OUT, ENTRANCE_SECONDS } from "@/lib/motion";
-import { readToolName } from "@openbot/shared/tool-name";
 import {
   asText,
   forDisplay,
   REFUSAL_MARKER,
   toolResultFailed,
 } from "@/lib/plugins/tool-result";
+import { useResultVisibility } from "@/lib/product-telemetry";
 import { readTeamBotConsent } from "@/lib/team-bots";
 import { cn } from "@/lib/utils";
-import { useResultVisibility } from "@/lib/product-telemetry";
 import { VOICE_CHAT_ACTIVITY, type VoiceChatEntry } from "@/lib/voice/archive";
 import { AppAccessCard } from "./app-access-card";
 import { isBrowserStep } from "./browser-activity";
@@ -193,7 +194,7 @@ const RESTORING_ANSWER_LINES = [
 function RestoringTranscript() {
   return (
     // One announcement, with every bar hidden from it: nine empty shapes read aloud is worse.
-    <div aria-label="Loading this conversation" role="status">
+    <div aria-label={t("Loading this conversation")} role="status">
       <div aria-hidden="true" className="flex justify-end pb-7">
         <Skeleton className="h-10 w-64 rounded-xl bg-muted/40 motion-reduce:animate-none" />
       </div>
@@ -228,7 +229,7 @@ function Thinking() {
       // is doing. The text says it, so a screen reader is told the same thing the shimmer implies.
       role="status"
     >
-      Thinking
+      {t("Thinking")}
     </p>
   );
 }
@@ -390,7 +391,7 @@ function Queued({
            * `status` rather than `alert`, matching the thinking line: a person who has just chosen
            * to queue something is not being interrupted by the news that it is queued.
            */}
-          <span role="status">Queued</span>
+          <span role="status">{t("Queued")}</span>
           {onRemove ? (
             <button
               /*
@@ -408,7 +409,7 @@ function Queued({
               onClick={onRemove}
               type="button"
             >
-              Remove
+              {t("Remove")}
             </button>
           ) : null}
         </MessageFooter>
@@ -691,7 +692,7 @@ function ResponsibilityFiring({
         <p className="whitespace-pre-wrap">{turn.instruction}</p>
         <details className="group mt-1">
           <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-sm text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
-            Details
+            {t("Details")}
             <IconChevronDown
               aria-hidden
               className="size-3 transition-transform group-open:rotate-180 motion-reduce:transition-none"
@@ -1163,7 +1164,7 @@ function SentAttachmentTile({ attachment }: { attachment: SentAttachment }) {
         <div className="min-w-0">
           {/* `title` because the tile is fixed-width and a long name is cut, not wrapped. */}
           <p className="truncate font-medium text-sm" title={filename}>
-            {filename ?? "Untitled file"}
+            {filename ?? t("Untitled file")}
           </p>
           <p className="text-muted-foreground text-xs">Attachment</p>
         </div>
@@ -1196,7 +1197,7 @@ function SentAttachmentTile({ attachment }: { attachment: SentAttachment }) {
 function unavailableSentence(filename?: string): string {
   return filename
     ? `${filename} is unavailable.`
-    : "This attachment is unavailable.";
+    : t("This attachment is unavailable.");
 }
 
 /**
@@ -1335,7 +1336,7 @@ function AttachmentLightbox({
         <DialogClose
           render={
             <button
-              aria-label="Close"
+              aria-label={t("Close")}
               className="absolute top-4 right-4 grid size-9 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
               type="button"
             />
@@ -1357,7 +1358,7 @@ function AttachmentLightbox({
  */
 function activityName(activityType: string): string {
   return activityType === "open-generative-ui"
-    ? "This Bot's generated interface"
+    ? t("This Bot's generated interface")
     : activityType;
 }
 

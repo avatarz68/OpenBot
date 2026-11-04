@@ -33,6 +33,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { type ConnectionRow, connectionRows } from "@/lib/connections/rows";
+import { t } from "@/lib/i18n";
 import {
   identityProvidersQueryOptions,
   linkedAccountsQueryOptions,
@@ -319,8 +320,10 @@ function RouteComponent() {
   return (
     <PageShell
       className="@container"
-      description="Connect your accounts so Bots can use apps on your behalf."
-      title="Connections"
+      description={t(
+        "Connect your accounts so Bots can use apps on your behalf.",
+      )}
+      title={t("Connections")}
     >
       {/*
        * For `?connected=` only the failure is worth saying. A success needs no sentence: the row it
@@ -329,7 +332,7 @@ function RouteComponent() {
        */}
       {arrival.outcome === "failed" ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't connect that account. Nothing was saved. Try again.
+          {t("Couldn't connect that account. Nothing was saved. Try again.")}
         </p>
       ) : null}
       {notice ? (
@@ -366,12 +369,13 @@ function RouteComponent() {
          */}
         {loading ? null : plugins.error || connections.error ? (
           <p className="mt-4 text-destructive text-sm" role="alert">
-            Couldn't load your connections. Reload the page, or ask an admin if
-            it keeps happening.
+            {t(
+              "Couldn't load your connections. Reload the page, or ask an admin if it keeps happening.",
+            )}
           </p>
         ) : rows.length === 0 ? (
-          <PageEmpty icon={IconPlug} title="No apps yet">
-            Apps show up here once an admin turns them on.
+          <PageEmpty icon={IconPlug} title={t("No apps yet")}>
+            {t("Apps show up here once an admin turns them on.")}
           </PageEmpty>
         ) : (
           <>
@@ -381,8 +385,8 @@ function RouteComponent() {
                   <IconSearch aria-hidden="true" className="size-4" />
                 </InputGroupAddon>
                 <InputGroupInput
-                  aria-label="Search connections"
-                  placeholder="Search connections"
+                  aria-label={t("Search connections")}
+                  placeholder={t("Search connections")}
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
@@ -411,8 +415,9 @@ function RouteComponent() {
         )}
         {links.error || providers.error ? (
           <p className="mt-4 text-destructive text-sm" role="alert">
-            Couldn't load GitHub and Slack, so they aren't listed. Reload the
-            page.
+            {t(
+              "Couldn't load GitHub and Slack, so they aren't listed. Reload the page.",
+            )}
           </p>
         ) : null}
       </PageSection>
@@ -473,7 +478,7 @@ function ConnectionStateLabel({ state }: { state: ConnectionRow["state"] }) {
           aria-hidden="true"
           className="size-3.5 text-emerald-600 dark:text-emerald-400"
         />
-        Connected
+        {t("Connected")}
       </span>
     );
   }

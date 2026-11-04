@@ -5,6 +5,7 @@ import {
   PageSection,
   PageShell,
 } from "@/components/layout/page-shell";
+import { LanguagePicker } from "@/components/settings/language-picker";
 import { MessageListPreference } from "@/components/settings/message-list-preference";
 import { ProfileSettings } from "@/components/settings/profile";
 import { StandingInstructions } from "@/components/settings/standing-instructions";
@@ -19,6 +20,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { formatHotkey, HOTKEYS } from "@/lib/hotkeys/hotkeys";
+import { t } from "@/lib/i18n";
 import { SkinPicker } from "@/skins/skin-picker";
 
 export const Route = createFileRoute("/_authed/settings/")({
@@ -38,22 +40,24 @@ function RouteComponent() {
    */
   return (
     <PageShell
-      description="Customize OpenBot’s appearance and message display. Your skin and message settings apply to your account; the theme applies only to this browser."
-      title="Preferences"
+      description={t(
+        "Customize OpenBot’s appearance and message display. Your skin and message settings apply to your account; the theme applies only to this browser.",
+      )}
+      title={t("Preferences")}
     >
       <ProfileSettings />
-      <PageSection title="General">
+      <PageSection title={t("General")}>
         <PageRows>
           <Item size="sm">
             <ItemContent>
-              <ItemTitle>Dark theme</ItemTitle>
+              <ItemTitle>{t("Dark theme")}</ItemTitle>
               <ItemDescription>
-                Use the dark appearance across OpenBot.
+                {t("Use the dark appearance across OpenBot.")}
               </ItemDescription>
             </ItemContent>
             <ItemActions>
               <Switch
-                aria-label="Dark theme"
+                aria-label={t("Dark theme")}
                 checked={dark}
                 onCheckedChange={setDark}
               />
@@ -61,6 +65,8 @@ function RouteComponent() {
           </Item>
           <Separator />
           <SkinPicker />
+          <Separator />
+          <LanguagePicker />
         </PageRows>
         <MessageListPreference />
       </PageSection>
@@ -74,7 +80,7 @@ function RouteComponent() {
        * actually do rather than what somebody remembered they did. Read-only on purpose: these
        * are not rebindable, and a row with nothing to click says so by having nothing to click.
        */}
-      <PageSection title="Keyboard shortcuts">
+      <PageSection title={t("Keyboard shortcuts")}>
         <PageRows>
           {HOTKEYS.map((hotkey, index) => (
             <React.Fragment key={hotkey.id}>

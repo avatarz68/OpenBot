@@ -31,6 +31,7 @@ import {
   agentQueryOptions,
 } from "@/lib/agents/queries";
 import { useStartChannel } from "@/lib/channels/start";
+import { t } from "@/lib/i18n";
 import { useSkillCommands } from "@/lib/plugins/skill-commands";
 import { searchTextEntry } from "@/lib/search-text";
 import { newId } from "../../../../lib/new-id";
@@ -41,7 +42,7 @@ import { newId } from "../../../../lib/new-id";
  * profile links and reloads preserve the pending recipient without creating an empty channel.
  */
 /** What `GET /api/agents/:id` answers for a Bot this person cannot see. */
-const AGENT_NOT_FOUND = "Couldn't find that Bot.";
+const AGENT_NOT_FOUND = t("Couldn't find that Bot.");
 
 export const Route = createFileRoute("/_authed/_app/channel/new")({
   /*
@@ -95,7 +96,7 @@ function RouteComponent() {
   const urlAgentDetailFailed = needsUrlAgentDetail && detailError && !fetched;
   const loadError =
     rosterError && profiles === undefined
-      ? "Couldn't load your Bots. Reload the page."
+      ? t("Couldn't load your Bots. Reload the page.")
       : urlAgentDetailFailed
         ? /*
            * The server's 404 sentence (agents/routes.ts `mapStoreError`) means this person cannot see
@@ -103,8 +104,10 @@ function RouteComponent() {
            * other failure is a load that can be retried, and says so.
            */
           detailFailure?.message === AGENT_NOT_FOUND
-          ? "This Bot isn't available to you. It may be unpublished or not shared with you."
-          : "Couldn't load that Bot. Reload the page."
+          ? t(
+              "This Bot isn't available to you. It may be unpublished or not shared with you.",
+            )
+          : t("Couldn't load that Bot. Reload the page.")
         : null;
   /** Bots picked in the To: field, in the order they will answer; the URL's Bot until one is picked. */
   const [picked, setPicked] = useState<AgentProfile[] | null>(null);
@@ -175,8 +178,8 @@ function RouteComponent() {
               autoFocus={!chosen}
               placeholder={
                 selected.length
-                  ? "Add another Bot for a group…"
-                  : "Choose a Bot…"
+                  ? t("Add another Bot for a group…")
+                  : t("Choose a Bot…")
               }
             />
           </ComboboxChips>
@@ -200,7 +203,7 @@ function RouteComponent() {
                 <span className="text-muted-foreground">Create a new Bot</span>
               </button>
             </div>
-            <ComboboxEmpty>No Bots found.</ComboboxEmpty>
+            <ComboboxEmpty>{t("No Bots found.")}</ComboboxEmpty>
             <ComboboxList className="min-h-0">
               {(item: AgentProfile) => (
                 <ComboboxItem key={item.id} value={item} className="h-10">
@@ -270,7 +273,7 @@ function RouteComponent() {
               setError(
                 caught instanceof Error
                   ? caught.message
-                  : "Couldn't start the group. Try again.",
+                  : t("Couldn't start the group. Try again."),
               );
               throw caught;
             }
@@ -290,7 +293,7 @@ function RouteComponent() {
             setError(
               caught instanceof Error
                 ? caught.message
-                : "Couldn't start the conversation. Try again.",
+                : t("Couldn't start the conversation. Try again."),
             );
             throw caught;
           }
