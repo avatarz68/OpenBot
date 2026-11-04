@@ -1,5 +1,6 @@
 import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/client";
+import { t } from "@/lib/i18n";
 import { routineKeys } from "./queries";
 
 /**
@@ -10,7 +11,7 @@ import { routineKeys } from "./queries";
  * `server/src/routines/routes.ts` for the full reasoning.
  */
 
-const FALLBACK = "That routine could not be changed.";
+const FALLBACK = t("That routine could not be changed.");
 
 function invalidateRoutines(queryClient: QueryClient) {
   return queryClient.invalidateQueries({ queryKey: routineKeys.all });
@@ -49,7 +50,7 @@ export function runRoutineNowMutationOptions(queryClient: QueryClient) {
     mutationFn: (id: string) =>
       client(`/api/routines/${encodeURIComponent(id)}/run`, {
         method: "POST",
-        fallback: "That routine could not be started.",
+        fallback: t("That routine could not be started."),
       }),
     onSuccess: () => invalidateRoutines(queryClient),
   });

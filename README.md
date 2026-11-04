@@ -79,7 +79,7 @@ Ohne Anmeldedienst gilt jede Anfrage als ein lokaler Administrator (`OPENBOT_SIN
 
 Die App öffnet auf Deutsch, weil `examples/impppact/brand.yaml` `default_locale: de` setzt. Jede Person kann unter Einstellungen → Sprache auf Englisch umstellen (gespeichert im Browser). Ohne Angabe im Mandanten gilt die Sprache des Browsers, sonst Englisch.
 
-Übersetzt sind die täglichen Wege: Seitenleiste, Chat mit Eingabefeld und Meldungen, neue Unterhaltung, Gruppen, Sprachanruf, Verbindungen, Fähigkeiten, Einstellungen und der Einstieg. **Noch englisch** sind unter anderem Admin, die Seiten eines einzelnen Bots (Zugriff, Aktivität, Routinen, Gedächtnis), Freigaben, Audit, Passwörter, Komponenten-Galerie und die Skins. Die Bots antworten unabhängig davon in der Sprache der Anfrage.
+Übersetzt sind die täglichen Wege: Seitenleiste, Chat mit Eingabefeld und Meldungen, neue Unterhaltung, Gruppen, Sprachanruf, Verbindungen, Fähigkeiten, Gedächtnis, Einstellungen, Freigaben, die Seiten eines einzelnen Bots (Profil, Aktivität, Zugriff, Einrichtung, Teilen, Routinen, Zuständigkeiten) und der Einstieg. **Noch englisch** sind unter anderem Admin, Audit, Passwörter, die Komponenten-Galerie und die Skins. Die Bots antworten unabhängig davon in der Sprache der Anfrage.
 
 So kommt ein Text dazu:
 

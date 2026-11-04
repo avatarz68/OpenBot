@@ -21,7 +21,7 @@ function MemoryPage() {
       {(agent) => (
         <>
           <p className="mt-6 text-muted-foreground text-sm">
-            What your Bots remember about you is in{" "}
+            {t("What your Bots remember about you is in")}{" "}
             <Link
               className="underline underline-offset-4"
               to="/capabilities/memory"

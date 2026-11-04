@@ -16,6 +16,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
+import { t } from "@/lib/i18n";
 import {
   type ResponsibilityRecord,
   responsibilitiesQueryOptions,
@@ -51,10 +52,10 @@ export function BotResponsibilities({ agentId }: { agentId?: string }) {
       action={
         <Button onClick={() => setCreating(true)} size="sm" variant="ghost">
           <IconPlus />
-          New responsibility
+          {t("New responsibility")}
         </Button>
       }
-      title="Goals"
+      title={t("Goals")}
     >
       {/* Pending, error, empty, rows — pending first, so no sentence asserts anything mid-fetch. */}
       {goals.isPending ? null : goals.error ? (
@@ -70,15 +71,15 @@ export function BotResponsibilities({ agentId }: { agentId?: string }) {
               variant="outline"
             >
               <IconPlus />
-              New responsibility
+              {t("New responsibility")}
             </Button>
           }
           icon={IconChecklist}
-          title="No responsibilities yet"
+          title={t("No responsibilities yet")}
         >
           {agentId
-            ? "Work you give this Bot to keep doing shows up here."
-            : "Work you give your Bots to keep doing shows up here."}
+            ? t("Work you give this Bot to keep doing shows up here.")
+            : t("Work you give your Bots to keep doing shows up here.")}
         </PageEmpty>
       ) : (
         <PageRows>

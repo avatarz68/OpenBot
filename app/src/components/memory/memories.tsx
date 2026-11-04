@@ -30,6 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { agentListQueryOptions } from "@/lib/agents/queries";
+import { t } from "@/lib/i18n";
 import {
   createMemoryMutationOptions,
   deleteMemoryMutationOptions,
@@ -63,13 +64,15 @@ export function RememberFact() {
         variant="ghost"
       >
         <IconPlus />
-        Remember a fact
+        {t("Remember a fact")}
       </Button>
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remember a fact</DialogTitle>
-            <DialogDescription>All your Bots will know it.</DialogDescription>
+            <DialogTitle>{t("Remember a fact")}</DialogTitle>
+            <DialogDescription>
+              {t("All your Bots will know it.")}
+            </DialogDescription>
           </DialogHeader>
           <DialogBody className="mt-4">
             {/* The submit button is in the footer and reaches this form by id, so DialogBody stays a
@@ -88,7 +91,7 @@ export function RememberFact() {
             >
               <Field>
                 <FieldLabel htmlFor={`${formId}-content`}>
-                  Something you want your Bots to know
+                  {t("Something you want your Bots to know")}
                 </FieldLabel>
                 <Textarea
                   id={`${formId}-content`}
@@ -96,7 +99,7 @@ export function RememberFact() {
                   maxLength={6000}
                   value={content}
                   onChange={(event) => setContent(event.target.value)}
-                  placeholder="I prefer meetings in the morning."
+                  placeholder={t("I prefer meetings in the morning.")}
                 />
               </Field>
             </form>
@@ -108,7 +111,7 @@ export function RememberFact() {
           </DialogBody>
           <DialogFooter className="mt-4">
             <Button onClick={() => setOpen(false)} size="sm" variant="outline">
-              Cancel
+              {t("Cancel")}
             </Button>
             <Button
               disabled={remember.isPending || !content.trim()}
@@ -116,7 +119,7 @@ export function RememberFact() {
               size="sm"
               type="submit"
             >
-              Remember
+              {t("Remember")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -144,7 +147,7 @@ export function MemoryList({
     <PageSection
       action={action}
       description={description}
-      title="Your memories"
+      title={t("Your memories")}
     >
       {memories.isPending ? null : memories.error ? (
         <p role="alert" className="mt-4 text-destructive text-sm">
@@ -163,8 +166,8 @@ export function MemoryList({
           ))}
         </PageRows>
       ) : (
-        <PageEmpty icon={IconBrain} title="No memories yet">
-          Add one with Remember a fact.
+        <PageEmpty icon={IconBrain} title={t("No memories yet")}>
+          {t("Add one with Remember a fact.")}
         </PageEmpty>
       )}
     </PageSection>
@@ -194,14 +197,14 @@ function MemoryRow({
   // forgotten here but not paused or reviewed.
   const heldByIntelligence = memory.formedBy === "intelligence";
   const status = heldByIntelligence
-    ? "Kept in Intelligence"
+    ? t("Kept in Intelligence")
     : !memory.enabled
-      ? "Turned off"
+      ? t("Turned off")
       : memory.formedBy === "bot"
-        ? `Formed by ${botName}${memory.reviewState === "unreviewed" ? " · needs review" : ""}`
+        ? `${t("Formed by {name}", { name: botName })}${memory.reviewState === "unreviewed" ? ` · ${t("needs review")}` : ""}`
         : memory.reviewState === "unreviewed"
-          ? "Imported · needs review"
-          : "Reviewed";
+          ? t("Imported · needs review")
+          : t("Reviewed");
   return (
     <Item size="sm">
       <ItemMedia variant="icon">
@@ -212,19 +215,22 @@ function MemoryRow({
           {memory.content}
         </ItemTitle>
         <ItemDescription className="line-clamp-none">
-          {memory.provenance} · {status}
+          {memory.provenance === "You" ? t("You") : memory.provenance} ·{" "}
+          {status}
         </ItemDescription>
         {memory.formedBy === "bot" && (
           <ItemDescription className="line-clamp-none">
-            From {memory.sourceApp ?? "a conversation"}
+            {t("From {source}", {
+              source: memory.sourceApp ?? t("a conversation"),
+            })}
             {memory.observedAt
-              ? `, read ${new Date(memory.observedAt).toLocaleString()}`
+              ? `, ${t("read {time}", { time: new Date(memory.observedAt).toLocaleString() })}`
               : ""}
             {memory.sourceLink && (
               <>
                 {" · "}
                 <a href={memory.sourceLink} target="_blank" rel="noreferrer">
-                  Open record
+                  {t("Open record")}
                 </a>
               </>
             )}
@@ -241,7 +247,7 @@ function MemoryRow({
               size="sm"
               variant="outline"
             >
-              Edit
+              {t("Edit")}
             </Button>
             {memory.reviewState === "unreviewed" && (
               <Button
@@ -249,7 +255,7 @@ function MemoryRow({
                 variant="outline"
                 onClick={() => update({ reviewState: "confirmed" })}
               >
-                Confirm
+                {t("Confirm")}
               </Button>
             )}
             <Button
@@ -258,7 +264,7 @@ function MemoryRow({
               disabled={forget.isPending}
               onClick={() => forget.mutate(memory.id)}
             >
-              Forget
+              {t("Forget")}
             </Button>
           </div>
         </ItemFooter>
@@ -323,13 +329,13 @@ function EditMemoryDialog({
     <Dialog onOpenChange={(next) => !next && onClose()} open>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit memory</DialogTitle>
+          <DialogTitle>{t("Edit memory")}</DialogTitle>
           <DialogDescription>{memory.provenance}</DialogDescription>
         </DialogHeader>
         <DialogBody className="mt-4">
           <Field>
             <FieldLabel className="sr-only" htmlFor={id}>
-              Memory
+              {t("Memory")}
             </FieldLabel>
             <Textarea
               autoFocus
@@ -348,7 +354,7 @@ function EditMemoryDialog({
         </DialogBody>
         <DialogFooter className="mt-4">
           <Button onClick={onClose} size="sm" variant="outline">
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button
             disabled={saving || !content.trim()}

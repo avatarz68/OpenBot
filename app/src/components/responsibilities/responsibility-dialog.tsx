@@ -38,6 +38,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { t } from "@/lib/i18n";
 import { markdownComponents } from "@/lib/markdown";
 import {
   type ResponsibilityRecord,
@@ -58,9 +59,9 @@ export const STATUS: Record<
   Status,
   { label: string; icon: typeof IconTarget }
 > = {
-  active: { label: "Active", icon: IconTarget },
-  paused: { label: "Paused", icon: IconPlayerPause },
-  completed: { label: "Completed", icon: IconCircleCheck },
+  active: { label: t("Active"), icon: IconTarget },
+  paused: { label: t("Paused"), icon: IconPlayerPause },
+  completed: { label: t("Completed"), icon: IconCircleCheck },
 };
 
 const SOURCE_LABEL: Record<Source, string> = {
@@ -68,7 +69,7 @@ const SOURCE_LABEL: Record<Source, string> = {
   slack: "Slack",
   github: "GitHub",
   schedule: "Schedule",
-  connector: "Connected app",
+  connector: t("Connected app"),
   webhook: "Webhook",
   linear: "Linear",
   sentry: "Sentry",
@@ -128,7 +129,7 @@ export function ResponsibilityDialog({
     goal.progress
       ? {
           key: "progress",
-          label: "Progress",
+          label: t("Progress"),
           icon: IconProgress,
           text: goal.progress,
         }
@@ -136,7 +137,7 @@ export function ResponsibilityDialog({
     goal.lastResult
       ? {
           key: "result",
-          label: "Last result",
+          label: t("Last result"),
           icon: IconFlag,
           text: goal.lastResult,
         }
@@ -161,16 +162,16 @@ export function ResponsibilityDialog({
                     <IconTarget />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>Active</ItemTitle>
+                    <ItemTitle>{t("Active")}</ItemTitle>
                     <ItemDescription>
                       {goal.status === "active"
-                        ? "Its events and triggers start it."
-                        : "Paused. Its triggers won't start it."}
+                        ? t("Its events and triggers start it.")
+                        : t("Paused. Its triggers won't start it.")}
                     </ItemDescription>
                   </ItemContent>
                   <ItemActions>
                     <Switch
-                      aria-label="Active"
+                      aria-label={t("Active")}
                       checked={goal.status === "active"}
                       disabled={action.isPending}
                       onCheckedChange={(active) =>
@@ -205,10 +206,11 @@ export function ResponsibilityDialog({
                     <IconPlayerPlay />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>Run now</ItemTitle>
+                    <ItemTitle>{t("Run now")}</ItemTitle>
                     <ItemDescription>
-                      Runs it now, for real. The Bot does the work and can post
-                      and take actions.
+                      {t(
+                        "Runs it now, for real. The Bot does the work and can post and take actions.",
+                      )}
                     </ItemDescription>
                   </ItemContent>
                 </Item>
@@ -234,9 +236,9 @@ export function ResponsibilityDialog({
                     <IconCircleCheck />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>Complete</ItemTitle>
+                    <ItemTitle>{t("Complete")}</ItemTitle>
                     <ItemDescription>
-                      Mark it done. Nothing starts it after this.
+                      {t("Mark it done. Nothing starts it after this.")}
                     </ItemDescription>
                   </ItemContent>
                 </Item>
@@ -257,7 +259,7 @@ export function ResponsibilityDialog({
                 <IconMessage />
               </ItemMedia>
               <ItemContent>
-                <ItemTitle>Open conversation</ItemTitle>
+                <ItemTitle>{t("Open conversation")}</ItemTitle>
               </ItemContent>
               <ItemActions>
                 <IconChevronRight className="size-4 text-muted-foreground" />
@@ -287,7 +289,9 @@ export function ResponsibilityDialog({
           >
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor={`${formId}-title`}>Title</FieldLabel>
+                <FieldLabel htmlFor={`${formId}-title`}>
+                  {t("Title")}
+                </FieldLabel>
                 <Input
                   id={`${formId}-title`}
                   value={title}
@@ -298,7 +302,7 @@ export function ResponsibilityDialog({
               </Field>
               <Field>
                 <FieldLabel htmlFor={`${formId}-instruction`}>
-                  Instruction
+                  {t("Instruction")}
                 </FieldLabel>
                 <Textarea
                   id={`${formId}-instruction`}
@@ -310,7 +314,7 @@ export function ResponsibilityDialog({
               </Field>
               <Field>
                 <FieldLabel htmlFor={`${formId}-criteria`}>
-                  Success criteria
+                  {t("Success criteria")}
                 </FieldLabel>
                 <Textarea
                   id={`${formId}-criteria`}
@@ -347,7 +351,7 @@ export function ResponsibilityDialog({
                       <IconWebhook />
                     </ItemMedia>
                     <ItemContent>
-                      <ItemTitle>Events</ItemTitle>
+                      <ItemTitle>{t("Events")}</ItemTitle>
                       <ItemDescription className="line-clamp-none">
                         {goal.subscriptions
                           .map(
@@ -373,7 +377,7 @@ export function ResponsibilityDialog({
         </DialogBody>
         <DialogFooter className="mt-4">
           <Button onClick={onClose} size="sm" type="button" variant="outline">
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button
             disabled={edit.isPending}
@@ -392,7 +396,7 @@ export function ResponsibilityDialog({
 const RUN_LABEL: Record<string, string> = {
   queued: "Queued",
   running: "Running",
-  waiting: "Waiting for you",
+  waiting: t("Waiting for you"),
   succeeded: "Succeeded",
   failed: "Failed",
   skipped: "Skipped",
@@ -429,7 +433,7 @@ function Runs({
       <div className="flex items-center justify-between gap-2">
         <h3 className="font-medium text-sm">Runs</h3>
         <Button onClick={onToggle} size="sm" type="button" variant="ghost">
-          {shown ? "Hide runs" : "View runs"}
+          {shown ? t("Hide runs") : t("View runs")}
         </Button>
       </div>
       {!shown ? null : runs.isPending ? null : runs.error ? (
@@ -459,15 +463,17 @@ function Runs({
                     params={{ channelId }}
                     className="text-sm underline"
                   >
-                    Open conversation
+                    {t("Open conversation")}
                   </Link>
                 </ItemActions>
                 {run.waiting || run.error || run.replyText ? (
                   <ItemFooter className="min-w-0 flex-col items-stretch">
                     {run.waiting && (
                       <p>
-                        Waiting for {run.waiting.kind}. Answer at the top of
-                        this Bot's page or in the conversation.
+                        {t(
+                          "Waiting for {kind}. Answer at the top of this Bot's page or in the conversation.",
+                          { kind: run.waiting.kind },
+                        )}
                       </p>
                     )}
                     {run.error && (
@@ -483,7 +489,7 @@ function Runs({
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground text-sm">No runs yet.</p>
+        <p className="text-muted-foreground text-sm">{t("No runs yet.")}</p>
       )}
     </section>
   );

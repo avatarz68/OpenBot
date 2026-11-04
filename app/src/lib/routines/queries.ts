@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { client } from "@/lib/client";
+import { t } from "@/lib/i18n";
 
 /**
  * One standing instruction, as the Routines page sees it.
@@ -70,7 +71,7 @@ export function routineRunsQueryOptions(id: string) {
     queryKey: routineKeys.runs(id),
     queryFn: (): Promise<RoutineRunRecord[]> =>
       client(`/api/routines/${encodeURIComponent(id)}/runs`, "runs", {
-        fallback: "This routine's runs could not be loaded.",
+        fallback: t("This routine's runs could not be loaded."),
       }),
     // A run in flight settles within minutes; poll so Running turns into its outcome.
     refetchInterval: 5_000,
@@ -88,7 +89,7 @@ export function routinesQueryOptions() {
     queryKey: routineKeys.list(),
     queryFn: async (): Promise<RoutinesPage> => {
       const response = await client("/api/routines", {
-        fallback: "Your routines could not be loaded.",
+        fallback: t("Your routines could not be loaded."),
       });
       const body = (await response.json()) as Partial<RoutinesPage>;
       return {
