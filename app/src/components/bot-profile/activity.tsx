@@ -37,6 +37,7 @@ import {
   type BotActivity,
   botActivityQueryOptions,
 } from "@/lib/bot-lifecycle/queries";
+import { t } from "@/lib/i18n";
 import { relativeTime } from "@/lib/relative-time";
 import { cn } from "@/lib/utils";
 import { queryClient } from "@/query-client";
@@ -53,7 +54,7 @@ const ICONS: Record<ActivityKind, typeof IconBell> = {
 const KIND_LABEL: Record<ActivityKind, string> = {
   routine: "Routine",
   responsibility: "Responsibility",
-  handoff: "Delegated task",
+  handoff: t("Delegated task"),
   approval: "Approval",
   question: "Question",
   follow_up: "Follow-up",
@@ -223,7 +224,7 @@ export function BotActivityGlance({ agentId }: { agentId: string }) {
   const upcoming = upcomingOf(activity.data);
   if (activity.isPending || upcoming.length === 0) return null;
   return (
-    <PageSection title="Activity">
+    <PageSection title={t("Activity")}>
       <PageRows>
         {upcoming.map(({ item, live }) => (
           <Fragment key={item.id}>
@@ -251,7 +252,7 @@ export function BotActivityRow({ agentId }: { agentId: string }) {
       <AllActivityItem
         activity={activity.data}
         agentId={agentId}
-        title="Activity"
+        title={t("Activity")}
         withIcon
       />
     </>
@@ -261,7 +262,7 @@ export function BotActivityRow({ agentId }: { agentId: string }) {
 function AllActivityItem({
   activity,
   agentId,
-  title = "All activity",
+  title = t("All activity"),
   withIcon = false,
 }: {
   activity: BotActivity | undefined;
@@ -284,7 +285,7 @@ function AllActivityItem({
         <ItemDescription>
           {activity
             ? activitySummary(activity)
-            : "Couldn't load this Bot's activity."}
+            : t("Couldn't load this Bot's activity.")}
         </ItemDescription>
       </ItemContent>
       <ItemActions>
@@ -307,8 +308,8 @@ export function activitySummary(activity: BotActivity): string {
   ].filter(Boolean);
   if (parts.length) return parts.join(" · ");
   return activity.completed.length
-    ? "Nothing running or scheduled"
-    : "Nothing yet";
+    ? t("Nothing running or scheduled")
+    : t("Nothing yet");
 }
 
 /** In progress, Scheduled and Completed, read from the ledgers the work already lives in. */
@@ -317,9 +318,9 @@ export function BotActivitySections({ agentId }: { agentId: string }) {
   if (activity.isPending) return null;
   if (activity.error)
     return (
-      <PageSection title="Activity">
+      <PageSection title={t("Activity")}>
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't load this Bot's activity. Reload the page.
+          {t("Couldn't load this Bot's activity. Reload the page.")}
         </p>
       </PageSection>
     );
@@ -327,22 +328,22 @@ export function BotActivitySections({ agentId }: { agentId: string }) {
     <>
       <ActivitySection
         agentId={agentId}
-        empty="Nothing is running or waiting on you."
+        empty={t("Nothing is running or waiting on you.")}
         items={activity.data.inProgress}
         live
-        title="In progress"
+        title={t("In progress")}
       />
       <ActivitySection
         agentId={agentId}
-        empty="Nothing is scheduled."
+        empty={t("Nothing is scheduled.")}
         items={activity.data.scheduled}
-        title="Scheduled"
+        title={t("Scheduled")}
       />
       <ActivitySection
         agentId={agentId}
-        empty="Nothing has finished yet."
+        empty={t("Nothing has finished yet.")}
         items={activity.data.completed}
-        title="Completed"
+        title={t("Completed")}
       />
     </>
   );

@@ -5,6 +5,7 @@ import {
   botAttentionQueryOptions,
   lastPingQueryOptions,
 } from "@/lib/bot-lifecycle/queries";
+import { t } from "@/lib/i18n";
 import {
   type ProactiveSuggestion,
   proactiveSuggestionsQueryOptions,
@@ -113,8 +114,8 @@ export function pingNotice(
   });
   if (once.length === 0)
     return {
-      title: "Something needs you",
-      body: "Open Bots to see what's waiting.",
+      title: t("Something needs you"),
+      body: t("Open Bots to see what's waiting."),
     };
   const lines = once.slice(0, PING_LISTED).map((item) => {
     const bot = botName(item.agentId);
@@ -125,7 +126,7 @@ export function pingNotice(
   return {
     title:
       once.length === 1
-        ? "One thing needs you"
+        ? t("One thing needs you")
         : `${once.length} things need you`,
     body:
       body.length > PING_BODY_LIMIT
@@ -244,7 +245,7 @@ export function BotsNavBadge() {
   if (bots.some((bot) => bot.unread > 0)) {
     return (
       <span
-        aria-label="Unread messages"
+        aria-label={t("Unread messages")}
         className="ml-auto size-2 rounded-full bg-primary"
         role="img"
       />

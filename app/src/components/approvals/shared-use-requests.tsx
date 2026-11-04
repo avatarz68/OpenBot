@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
 import { currentUserQueryOptions } from "@/lib/auth/queries";
+import { t } from "@/lib/i18n";
 import {
   decideSharedUseMutationOptions,
   describeApproval,
@@ -21,11 +22,12 @@ import {
 } from "@/lib/plugins/shared-use";
 
 const WHY: Record<SharedUseRequestReason, string> = {
-  refused_call:
+  refused_call: t(
     "An action was blocked. This Bot reaches more people than approved.",
-  publish: "Its owner widened who can reach it.",
-  trigger: "Its owner added a trigger that lets outside messages steer it.",
-  grant: "It was given the app's actions.",
+  ),
+  publish: t("Its owner widened who can reach it."),
+  trigger: t("Its owner added a trigger that lets outside messages steer it."),
+  grant: t("It was given the app's actions."),
 };
 
 /**
@@ -42,7 +44,7 @@ export function SharedUseRequests() {
   if (!isAdmin || !requests.data?.length) return null;
 
   return (
-    <PageSection title="Shared account requests">
+    <PageSection title={t("Shared account requests")}>
       {decide.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
           {decide.error.message}
@@ -68,7 +70,7 @@ export function SharedUseRequests() {
                   Now:{" "}
                   {request.current
                     ? describeApproval(request.current)
-                    : "Not approved"}
+                    : t("Not approved")}
                 </p>
                 <p className="text-sm">
                   Asked: {describeApproval(request.proposed)}
@@ -82,7 +84,7 @@ export function SharedUseRequests() {
                   }
                   size="sm"
                 >
-                  Approve
+                  {t("Approve")}
                 </Button>
                 <Button
                   disabled={decide.isPending}
@@ -92,7 +94,7 @@ export function SharedUseRequests() {
                   size="sm"
                   variant="outline"
                 >
-                  Decline
+                  {t("Decline")}
                 </Button>
               </ItemFooter>
             </Item>

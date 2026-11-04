@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { BotSubpage } from "@/components/bot-profile/bot-subpage";
 import { MemorySources } from "@/components/memory/sources";
 import { ProactiveResearchSettings } from "@/components/suggestions/proactive-panel";
+import { t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authed/_app/bots/$agentId/memory")({
   component: MemoryPage,
@@ -12,8 +13,10 @@ function MemoryPage() {
   return (
     <BotSubpage
       agentId={agentId}
-      description="Choose which apps this Bot learns from and manage its check-ins."
-      title="Memory"
+      description={t(
+        "Choose which apps this Bot learns from and manage its check-ins.",
+      )}
+      title={t("Memory")}
     >
       {(agent) => (
         <>
@@ -23,7 +26,7 @@ function MemoryPage() {
               className="underline underline-offset-4"
               to="/capabilities/memory"
             >
-              Capabilities
+              {t("Capabilities")}
             </Link>
             .
           </p>

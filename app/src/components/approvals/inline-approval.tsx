@@ -9,6 +9,7 @@ import {
   decideApproval,
 } from "@/lib/approvals";
 import { noteWatched } from "@/lib/computers/activity";
+import { t } from "@/lib/i18n";
 
 /**
  * A pending approval, drawn in the conversation where the action it holds would have been.
@@ -45,14 +46,14 @@ export function InlineApproval({
   const words = approvalWords(request.action);
   const choices: [ApprovalDecision, string][] = handOff
     ? [
-        ["handled", "I did it myself"],
-        ["deny", "Don't do it"],
+        ["handled", t("I did it myself")],
+        ["deny", t("Don't do it")],
       ]
     : [
-        ["allow_once", "Allow once"],
+        ["allow_once", t("Allow once")],
         ...(offersStandingRule(request.action)
           ? [
-              ["allow_always", "Always allow here"] as [
+              ["allow_always", t("Always allow here")] as [
                 ApprovalDecision,
                 string,
               ],
@@ -62,11 +63,11 @@ export function InlineApproval({
       ];
   return (
     <section
-      aria-label="Waiting for your approval"
+      aria-label={t("Waiting for your approval")}
       className="space-y-2 rounded-lg border p-3 text-sm"
     >
       <p className="font-medium">
-        {handOff ? "This needs you" : "Waiting for your approval"}:{" "}
+        {handOff ? t("This needs you") : t("Waiting for your approval")}:{" "}
         {words.action} on {words.place}
       </p>
       {request.action.policy ? (

@@ -1,3 +1,4 @@
+import { readToolName } from "@openbot/shared/tool-name";
 import {
   IconApps,
   IconBox,
@@ -42,13 +43,13 @@ import {
   giveableAppsQueryOptions,
 } from "@/lib/app-access/queries";
 import { currentUserQueryOptions } from "@/lib/auth/queries";
+import { t } from "@/lib/i18n";
 import { setPluginGrantMutationOptions } from "@/lib/plugins/mutations";
 import {
   agentPluginsQueryOptions,
   type GrantedPlugins,
   pluginsPageQueryOptions,
 } from "@/lib/plugins/queries";
-import { readToolName } from "@openbot/shared/tool-name";
 import { queryClient } from "@/query-client";
 
 /**
@@ -145,7 +146,7 @@ function YourApps({ agent }: { agent: AgentProfile }) {
   return (
     <PageSection
       description={`Turn on an app to let ${agent.name} use it. It always uses the account of whoever is asking.`}
-      title="Your apps"
+      title={t("Your apps")}
     >
       {error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
@@ -154,7 +155,7 @@ function YourApps({ agent }: { agent: AgentProfile }) {
       ) : null}
       {giveable.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't load your apps. Reload the page.
+          {t("Couldn't load your apps. Reload the page.")}
         </p>
       ) : rows.length === 0 ? (
         <PageEmpty
@@ -165,13 +166,13 @@ function YourApps({ agent }: { agent: AgentProfile }) {
               variant="outline"
             >
               <IconPlug />
-              Connections
+              {t("Connections")}
             </Button>
           }
           icon={IconApps}
-          title="No apps to give yet"
+          title={t("No apps to give yet")}
         >
-          Connect an app to let your Bots use it.
+          {t("Connect an app to let your Bots use it.")}
         </PageEmpty>
       ) : (
         <PageRows>
@@ -193,7 +194,7 @@ function YourApps({ agent }: { agent: AgentProfile }) {
                     <ItemTitle>{app.displayName}</ItemTitle>
                     <ItemDescription>
                       {locked
-                        ? "An admin gave it to this Bot."
+                        ? t("An admin gave it to this Bot.")
                         : granted
                           ? `${agent.name} can use ${yours}.`
                           : `${agent.name} can't use ${yours}.`}
@@ -236,8 +237,10 @@ function YourSkills({ agentId }: { agentId: string }) {
   );
   return (
     <PageSection
-      description="Turn on a skill to use it with this Bot. Type / in a conversation to run it."
-      title="Your skills"
+      description={t(
+        "Turn on a skill to use it with this Bot. Type / in a conversation to run it.",
+      )}
+      title={t("Your skills")}
     >
       {grant.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
@@ -246,7 +249,7 @@ function YourSkills({ agentId }: { agentId: string }) {
       ) : null}
       {page.isPending ? null : page.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't load your skills. Reload the page.
+          {t("Couldn't load your skills. Reload the page.")}
         </p>
       ) : skills.length === 0 ? (
         <PageEmpty
@@ -257,13 +260,13 @@ function YourSkills({ agentId }: { agentId: string }) {
               variant="outline"
             >
               <IconPlus />
-              Write a skill
+              {t("Write a skill")}
             </Button>
           }
           icon={IconBox}
-          title="No skills yet"
+          title={t("No skills yet")}
         >
-          Skills you write show up here.
+          {t("Skills you write show up here.")}
         </PageEmpty>
       ) : (
         <PageRows>
@@ -326,7 +329,7 @@ function Granted({ agentId, mine }: { agentId: string; mine: boolean }) {
   if (!plugins.data) {
     return (
       <p className="mt-6 text-destructive text-sm" role="alert">
-        Couldn't load what this Bot can use. Reload the page.
+        {t("Couldn't load what this Bot can use. Reload the page.")}
       </p>
     );
   }
@@ -344,19 +347,27 @@ function Granted({ agentId, mine }: { agentId: string; mine: boolean }) {
   const count = states.length + rest.length + skills.length;
   return (
     <PageSection
-      description="Review this Bot’s available apps and skills, and check which apps are ready to use. The Bot cannot use apps or skills outside this list."
-      title="What it can use"
+      description={t(
+        "Review this Bot’s available apps and skills, and check which apps are ready to use. The Bot cannot use apps or skills outside this list.",
+      )}
+      title={t("What it can use")}
     >
       {apps.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't check whether each app is ready for you. Reload the page.
+          {t(
+            "Couldn't check whether each app is ready for you. Reload the page.",
+          )}
         </p>
       ) : null}
       {count === 0 ? (
-        <PageEmpty icon={IconApps} title="No apps yet">
+        <PageEmpty icon={IconApps} title={t("No apps yet")}>
           {mine
-            ? "Turn one on under Your apps, or ask an admin. Until then this Bot can only talk with you."
-            : "An admin has to add them. Until then this Bot can only talk with you."}
+            ? t(
+                "Turn one on under Your apps, or ask an admin. Until then this Bot can only talk with you.",
+              )
+            : t(
+                "An admin has to add them. Until then this Bot can only talk with you.",
+              )}
         </PageEmpty>
       ) : (
         <PageRows>
@@ -437,7 +448,9 @@ function Granted({ agentId, mine }: { agentId: string; mine: boolean }) {
                   <ItemDescription>{skill.summary}</ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <span className="text-muted-foreground text-sm">Skill</span>
+                  <span className="text-muted-foreground text-sm">
+                    {t("Skill")}
+                  </span>
                 </ItemActions>
               </Item>
             </Fragment>

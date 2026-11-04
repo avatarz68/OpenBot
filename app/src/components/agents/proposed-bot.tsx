@@ -10,6 +10,7 @@ import {
   type ProposedBot,
   wasCreated,
 } from "@/lib/agents/proposal";
+import { t } from "@/lib/i18n";
 
 /**
  * The coworker a Bot has written, put in front of the person before it exists.
@@ -95,7 +96,7 @@ export function ProposedBotCard({
   if (!respond) {
     return (
       <GalleryFrame title={titleFor(args.name, clashes)}>
-        <p className="text-muted-foreground text-sm">Writing the Bot…</p>
+        <p className="text-muted-foreground text-sm">{t("Writing the Bot…")}</p>
       </GalleryFrame>
     );
   }
@@ -116,7 +117,7 @@ export function ProposedBotCard({
       // Left on the card with the buttons still live. See `refusal` above.
       setSending(null);
       setRefusal(
-        cause instanceof Error ? cause.message : "The Bot wasn't created.",
+        cause instanceof Error ? cause.message : t("The Bot wasn't created."),
       );
       return;
     }
@@ -134,11 +135,11 @@ export function ProposedBotCard({
 
   return (
     <GalleryFrame
-      action={<Badge tone="caution">Waiting on you</Badge>}
+      action={<Badge tone="caution">{t("Waiting on you")}</Badge>}
       caption={
         clashes
           ? `There's already a ${clashes.title}, and it's ${clashes.ownership === "the deployment's" ? "built into OpenBot" : clashes.ownership}. Two Bots with the same name are hard to tell apart.`
-          : "Nothing is created until you press Create it."
+          : t("Nothing is created until you press Create it.")
       }
       title={titleFor(values.name, clashes)}
     >
@@ -147,7 +148,7 @@ export function ProposedBotCard({
         <dd className="min-w-0 break-words font-medium">{values.name}</dd>
         <dt className="truncate text-muted-foreground">Job</dt>
         <dd className="min-w-0 break-words">{values.title}</dd>
-        <dt className="truncate text-muted-foreground">Skills</dt>
+        <dt className="truncate text-muted-foreground">{t("Skills")}</dt>
         <dd className="min-w-0 break-words">
           {skills.length > 0 ? (
             <span className="font-mono text-xs">
@@ -160,7 +161,7 @@ export function ProposedBotCard({
       </dl>
 
       <p className="mt-3 text-muted-foreground text-xs">
-        Its instructions. It follows these every time it replies.
+        {t("Its instructions. It follows these every time it replies.")}
       </p>
       {/*
        * Scrolled rather than clamped, and the distinction is the whole point of the card. A clamp
@@ -172,7 +173,9 @@ export function ProposedBotCard({
       </p>
 
       <p className="mt-2 text-muted-foreground text-xs">
-        It starts private, with no apps. Apps are added on its page afterwards.
+        {t(
+          "It starts private, with no apps. Apps are added on its page afterwards.",
+        )}
       </p>
 
       {refusal ? (
@@ -187,7 +190,7 @@ export function ProposedBotCard({
           onClick={() => void make()}
           size="sm"
         >
-          {sending === "create" ? "Creating…" : "Create it"}
+          {sending === "create" ? "Creating…" : t("Create it")}
         </Button>
         <Button
           disabled={Boolean(sending)}
@@ -195,7 +198,7 @@ export function ProposedBotCard({
           size="sm"
           variant="outline"
         >
-          {sending === "decline" ? "…" : "Don't create"}
+          {sending === "decline" ? "…" : t("Don't create")}
         </Button>
       </div>
     </GalleryFrame>
@@ -265,11 +268,11 @@ function Unwritable({
 
   return (
     <GalleryFrame
-      action={<Badge tone="neutral">Not created</Badge>}
-      title="Create a Bot"
+      action={<Badge tone="neutral">{t("Not created")}</Badge>}
+      title={t("Create a Bot")}
     >
       <p className="text-sm">
-        This Bot couldn't be created as written. It's being rewritten.
+        {t("This Bot couldn't be created as written. It's being rewritten.")}
       </p>
     </GalleryFrame>
   );

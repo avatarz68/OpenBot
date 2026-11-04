@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { agentListQueryOptions } from "@/lib/agents/queries";
 import { botAttentionQueryOptions } from "@/lib/bot-lifecycle/queries";
 import { channelListQueryOptions } from "@/lib/channels/queries";
+import { t } from "@/lib/i18n";
 import {
   type ProactiveSuggestion,
   proactiveSuggestionsQueryOptions,
@@ -35,7 +36,7 @@ export function useBotName() {
   return (agentId: string) =>
     bots.data?.find((bot) => bot.id === agentId)?.name ??
     attention.data?.find((bot) => bot.agentId === agentId)?.name ??
-    "Your Bot";
+    t("Your Bot");
 }
 
 /**

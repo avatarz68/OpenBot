@@ -62,6 +62,7 @@ import {
 } from "@/lib/agents/queries";
 import { isComposing } from "@/lib/composing";
 import { myCapabilitiesQueryOptions } from "@/lib/enterprise/queries";
+import { t } from "@/lib/i18n";
 import { queryClient } from "@/query-client";
 
 type TextField = "name" | "title" | "roleDescription";
@@ -73,12 +74,12 @@ const TEXT_FIELDS: {
   multiline?: boolean;
 }[] = [
   { field: "name", label: "Name", icon: IconId },
-  { field: "title", label: "Title", icon: IconTag },
+  { field: "title", label: t("Title"), icon: IconTag },
   {
     field: "roleDescription",
     // Not "Role": beside "Title" it read as a second job title, when it is the standing
     // instruction the Bot carries into every channel. The create dialog says the same.
-    label: "What it does",
+    label: t("What it does"),
     icon: IconTextCaption,
     multiline: true,
   },
@@ -97,7 +98,7 @@ export function SetupSections({ agent }: { agent: AgentProfile }) {
 
   return (
     <>
-      <PageSection title="Identity">
+      <PageSection title={t("Identity")}>
         <PageRows>
           {TEXT_FIELDS.map(({ field, label, icon: Icon }, index) => (
             <Fragment key={field}>
@@ -143,9 +144,9 @@ export function SetupSections({ agent }: { agent: AgentProfile }) {
                   <IconShieldCheck />
                 </ItemMedia>
                 <ItemContent>
-                  <ItemTitle>System owned</ItemTitle>
+                  <ItemTitle>{t("System owned")}</ItemTitle>
                   <ItemDescription>
-                    Comes with OpenBot. It doesn't belong to a person.
+                    {t("Comes with OpenBot. It doesn't belong to a person.")}
                   </ItemDescription>
                 </ItemContent>
               </Item>
@@ -184,16 +185,16 @@ function VisibilityRow({
         <IconEye />
       </ItemMedia>
       <ItemContent>
-        <ItemTitle>Visibility</ItemTitle>
+        <ItemTitle>{t("Visibility")}</ItemTitle>
         <ItemDescription>
           {error ??
             (agent.visibility === "private"
               ? agent.isolationActive
                 ? `Only you can see it and start conversations with it. ${ISOLATED_MAKING_PUBLIC}`
-                : "Only you can see it and start conversations with it."
+                : t("Only you can see it and start conversations with it.")
               : agent.isolationActive
                 ? `Everyone on OpenBot can find and use it. ${ISOLATED_PUBLIC_SHARES_LOGINS}`
-                : "Everyone on OpenBot can find and use it.")}
+                : t("Everyone on OpenBot can find and use it."))}
         </ItemDescription>
       </ItemContent>
       <ItemActions>
@@ -201,7 +202,7 @@ function VisibilityRow({
           <Select
             disabled={saving}
             // The label map, so the closed trigger says "Private" rather than the raw value.
-            items={{ private: "Private", public: "Public" }}
+            items={{ private: t("Private"), public: t("Public") }}
             onValueChange={async (next) => {
               if (next === agent.visibility) return;
               setError(null);
@@ -212,7 +213,7 @@ function VisibilityRow({
                 setError(
                   failure instanceof Error
                     ? failure.message
-                    : "Couldn't save. Try again.",
+                    : t("Couldn't save. Try again."),
                 );
               } finally {
                 setSaving(false);
@@ -224,13 +225,13 @@ function VisibilityRow({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="private">Private</SelectItem>
-              <SelectItem value="public">Public</SelectItem>
+              <SelectItem value="private">{t("Private")}</SelectItem>
+              <SelectItem value="public">{t("Public")}</SelectItem>
             </SelectContent>
           </Select>
         ) : (
           <span className="text-muted-foreground text-sm">
-            {agent.visibility === "private" ? "Private" : "Public"}
+            {agent.visibility === "private" ? t("Private") : t("Public")}
           </span>
         )}
       </ItemActions>
@@ -271,7 +272,9 @@ function IsolatedRow({
     (agent.isolated || (available && allowed));
 
   const summary = agent.systemOwned
-    ? "Comes with OpenBot, so it runs on the computer of whoever is using it."
+    ? t(
+        "Comes with OpenBot, so it runs on the computer of whoever is using it.",
+      )
     : agent.isolated
       ? agent.isolationActive
         ? isolatedExplained(isPublic)
@@ -292,7 +295,7 @@ function IsolatedRow({
         <IconDeviceDesktop />
       </ItemMedia>
       <ItemContent>
-        <ItemTitle id={`isolated-${agent.id}`}>Isolated</ItemTitle>
+        <ItemTitle id={`isolated-${agent.id}`}>{t("Isolated")}</ItemTitle>
         <ItemDescription className="line-clamp-none">
           {error ?? summary}
         </ItemDescription>
@@ -312,7 +315,7 @@ function IsolatedRow({
                 setError(
                   failure instanceof Error
                     ? failure.message
-                    : "Couldn't save. Try again.",
+                    : t("Couldn't save. Try again."),
                 );
               } finally {
                 setSaving(false);
@@ -332,8 +335,8 @@ function IsolatedRow({
 /** Where a Bot without a computer of its own runs: on the computer of whoever is using it. */
 function sharedSummary(isPublic: boolean): string {
   return isPublic
-    ? "Runs on the computer of whoever is using it."
-    : "Runs on your computer, alongside your other Bots.";
+    ? t("Runs on the computer of whoever is using it.")
+    : t("Runs on your computer, alongside your other Bots.");
 }
 
 /**
@@ -363,7 +366,7 @@ function EditTextDialog({
     const parsed = schema.safeParse(draft);
     if (!parsed.success) {
       setError(
-        parsed.error.issues[0]?.message ?? "Check this field and try again.",
+        parsed.error.issues[0]?.message ?? t("Check this field and try again."),
       );
       return;
     }
@@ -375,7 +378,7 @@ function EditTextDialog({
       setError(
         failure instanceof Error
           ? failure.message
-          : "Couldn't save. Try again.",
+          : t("Couldn't save. Try again."),
       );
     } finally {
       setSaving(false);
@@ -423,7 +426,7 @@ function EditTextDialog({
             size="sm"
             variant="outline"
           >
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button disabled={saving} onClick={() => void submit()} size="sm">
             {saving ? "Saving…" : "Save"}
@@ -441,21 +444,21 @@ function EditTextDialog({
 function ConnectionSection({ agent }: { agent: AgentProfile }) {
   const builtIn = !agent.endpoint || agent.builtIn;
   return (
-    <PageSection title="Connection">
+    <PageSection title={t("Connection")}>
       <PageRows>
         <Item size="sm">
           <ItemMedia variant="icon">
             <IconPlugConnected />
           </ItemMedia>
           <ItemContent>
-            <ItemTitle>{builtIn ? "Built in" : "Agent URL"}</ItemTitle>
+            <ItemTitle>{builtIn ? t("Built in") : t("Agent URL")}</ItemTitle>
             <ItemDescription
               className={
                 builtIn ? undefined : "line-clamp-none break-all font-mono"
               }
             >
               {builtIn
-                ? "Runs inside OpenBot. There's nothing to connect."
+                ? t("Runs inside OpenBot. There's nothing to connect.")
                 : agent.endpoint}
             </ItemDescription>
           </ItemContent>

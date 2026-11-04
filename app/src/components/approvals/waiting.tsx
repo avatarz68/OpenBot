@@ -23,6 +23,7 @@ import {
   approvalInboxOptions,
   decideApprovalMutationOptions,
 } from "@/lib/approvals";
+import { t } from "@/lib/i18n";
 import { queryClient } from "@/query-client";
 
 type WaitingQuestion = ApprovalInboxData["questions"][number];
@@ -75,9 +76,9 @@ function QuestionRow({
       {/* In from the edge by the icon and its gap, so the answer lines up with the question. */}
       <ItemFooter className="flex-col items-start pl-11">
         <Textarea
-          aria-label="Your answer"
+          aria-label={t("Your answer")}
           onChange={(event) => setText(event.target.value)}
-          placeholder="Your answer"
+          placeholder={t("Your answer")}
           value={text}
         />
         <Button
@@ -85,7 +86,7 @@ function QuestionRow({
           onClick={() => answer.mutate({ id: question.id, response: text })}
           size="sm"
         >
-          Send answer
+          {t("Send answer")}
         </Button>
         {answer.error ? (
           <p role="alert" className="text-sm text-destructive">
@@ -143,7 +144,7 @@ function RequestRow({
             }
             size="sm"
           >
-            I did it myself
+            {t("I did it myself")}
           </Button>
           <Button
             disabled={decision.isPending}
@@ -151,7 +152,7 @@ function RequestRow({
             size="sm"
             variant="outline"
           >
-            Don't do it
+            {t("Don't do it")}
           </Button>
         </ItemFooter>
       ) : (
@@ -166,7 +167,7 @@ function RequestRow({
             }
             size="sm"
           >
-            Allow once
+            {t("Allow once")}
           </Button>
           {offersStandingRule(request.action) ? (
             <Button
@@ -180,7 +181,7 @@ function RequestRow({
               size="sm"
               variant="outline"
             >
-              Always allow here
+              {t("Always allow here")}
             </Button>
           ) : null}
           <Button
@@ -274,7 +275,7 @@ export function BotNeedsYou({ agentId }: { agentId: string }) {
   )
     return null;
   return (
-    <PageSection title="Needs you">
+    <PageSection title={t("Needs you")}>
       {waiting.error || list.error ? (
         <p role="alert" className="mt-4 text-sm text-destructive">
           {(waiting.error ?? list.error)?.message}

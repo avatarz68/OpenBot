@@ -5,6 +5,7 @@ import {
   issueCallbackTokenMutationOptions,
   revokeCallbackTokenMutationOptions,
 } from "@/lib/agents/mutations";
+import { t } from "@/lib/i18n";
 
 /**
  * The credential this coworker presents when it calls a tool back.
@@ -37,19 +38,23 @@ export function CallbackTokenPanel({
   return (
     <section className="mt-6 grid gap-2">
       <h2 className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
-        Key for tools
+        {t("Key for tools")}
       </h2>
 
       <p className="text-muted-foreground text-sm">
         {hasToken
-          ? "This Bot has a key, so it can use its tools. If you make a new key, the old one stops working right away."
-          : "This Bot has no key yet. It can talk but can't use tools. Generate a key and add it to your agent's configuration."}
+          ? t(
+              "This Bot has a key, so it can use its tools. If you make a new key, the old one stops working right away.",
+            )
+          : t(
+              "This Bot has no key yet. It can talk but can't use tools. Generate a key and add it to your agent's configuration.",
+            )}
       </p>
 
       {token ? (
         <div className="grid gap-2 rounded-lg border border-border bg-card p-3">
           <p className="font-medium text-sm">
-            Copy this key now. You won't see it again.
+            {t("Copy this key now. You won't see it again.")}
           </p>
           {/*
            * Selectable and wrapped rather than a copy button alone: somebody pasting this into a
@@ -59,7 +64,7 @@ export function CallbackTokenPanel({
             {token}
           </code>
           <p className="text-muted-foreground text-xs">
-            If you lose it, make a new one.
+            {t("If you lose it, make a new one.")}
           </p>
           <Button onClick={() => setToken(null)} size="sm" variant="outline">
             Done
@@ -76,8 +81,8 @@ export function CallbackTokenPanel({
             {issue.isPending
               ? "Generating…"
               : hasToken
-                ? "Make a new key"
-                : "Generate key"}
+                ? t("Make a new key")
+                : t("Generate key")}
           </Button>
           {hasToken ? (
             <Button
@@ -86,7 +91,7 @@ export function CallbackTokenPanel({
               size="sm"
               variant="outline"
             >
-              {revoke.isPending ? "Revoking…" : "Revoke key"}
+              {revoke.isPending ? "Revoking…" : t("Revoke key")}
             </Button>
           ) : null}
         </div>
