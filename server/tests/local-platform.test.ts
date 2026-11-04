@@ -157,9 +157,17 @@ test("events pushed by a runner become the thread's message history", async () =
   ]);
 });
 
-test("the platform reports no entitlements, so memory stays in OpenBot", async () => {
+test("the platform is licensed but offers no features, so memory stays in OpenBot", async () => {
   const response = await fetch(`${base}/api/entitlements/runtime`);
   expect(response.status).toBe(200);
+  const body = (await response.json()) as {
+    status: string;
+    entitlement: { active: boolean; features: Record<string, boolean> };
+  };
+  expect(body.status).toBe("ready");
+  expect(body.entitlement.active).toBe(true);
+  // `features.memory` is what OpenBot reads to use Intelligence memory; it must be absent.
+  expect(body.entitlement.features.memory).toBeUndefined();
 });
 
 /** A Phoenix client that records every frame it receives, as a browser would. */

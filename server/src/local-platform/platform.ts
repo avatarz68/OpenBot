@@ -187,11 +187,13 @@ export function createLocalPlatform(
     const method = request.method;
 
     if (url.pathname === "/api/entitlements/runtime" && method === "GET")
-      // No memory, learning or trajectories: OpenBot falls back to its own stores.
+      // Active, so the SDK treats the deployment as licensed and shows no licence notices, but with
+      // no features: memory is `features.memory`, so OpenBot keeps it in its own database, and there
+      // is no learning or trajectory capture.
       return json({
         status: "ready",
         entitlement: {
-          active: false,
+          active: true,
           source: "selfHostedDeploymentLicense",
           features: {},
           limits: {},
