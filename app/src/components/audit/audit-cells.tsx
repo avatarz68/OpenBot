@@ -1,5 +1,6 @@
 import { type AuditOutcome, outcomeOf } from "@/lib/audit/outcome";
 import { silenceOf } from "@/lib/audit/silence";
+import { t } from "@/lib/i18n";
 
 /** One row as the API returns it. */
 export type AuditEvent = {
@@ -101,7 +102,7 @@ export function startedByText(event: AuditEvent, nameFor: NameFor): string {
     case "handoff":
       return event.initiatorId
         ? `Handed on by ${nameFor(event.initiatorId)}`
-        : "Handed on";
+        : t("Handed on");
     case "memory":
       return "A memory source";
     case "responsibility":
@@ -127,10 +128,10 @@ export function decisionText(event: AuditEvent): string {
   const routed =
     event.eventType === "channel.routed"
       ? payload.viaMention === true
-        ? "The person chose this Bot"
+        ? t("The person chose this Bot")
         : payload.fallback === true
-          ? "Sent to the default Bot"
-          : "Sent to the Bot it was meant for"
+          ? t("Sent to the default Bot")
+          : t("Sent to the Bot it was meant for")
       : null;
   return (
     routed ??
@@ -138,7 +139,7 @@ export function decisionText(event: AuditEvent): string {
     (outcome === "refused"
       ? "Blocked"
       : outcome === "did-not-happen"
-        ? "Did not happen"
+        ? t("Did not happen")
         : "Allowed")
   );
 }
@@ -368,11 +369,11 @@ export const OUTCOME_ROW: Record<AuditOutcome, string> = {
  * and one whose selector could not be reached, and only the last is a fault.
  */
 const DISCOVERY_REASONS: Record<string, string> = {
-  "under-floor": "Few enough tools to offer them all",
-  "nothing-declared": "No skill declares any of these tools",
-  unavailable: "Couldn't choose, so all were offered",
-  "nothing-chosen": "No skill applied, so all were offered",
-  selected: "Chosen by skill",
+  "under-floor": t("Few enough tools to offer them all"),
+  "nothing-declared": t("No skill declares any of these tools"),
+  unavailable: t("Couldn't choose, so all were offered"),
+  "nothing-chosen": t("No skill applied, so all were offered"),
+  selected: t("Chosen by skill"),
 };
 
 /** Target types whose id is a name worth putting on screen; anything else falls through. */
@@ -385,47 +386,47 @@ const NAMED_TARGETS = new Set([
 ]);
 
 const DECISIONS: Record<string, string> = {
-  "bot.declined": "The Bot declined",
+  "bot.declined": t("The Bot declined"),
   // Not a refusal, so not the refusal colour: nothing was blocked. The Bot was asked and never
   // answered, which is the same complaint as an action that was allowed and then did not happen.
-  "agent.stream_stalled": "The Bot stopped responding",
-  "agent.tool_limit_refused": "Too many tools for its model",
-  "computer.policy_loaded": "Boundary at start-up",
-  "computer.isolation_loaded": "Isolation at start-up",
-  "computer.control_taken": "A person took control",
-  "computer.control_released": "Control went back to the Bot",
-  "computer.help_requested": "The Bot asked for help",
-  "computer.secret_requested": "The Bot asked for a secret",
-  "computer.secret_supplied": "A person supplied a secret",
-  "computer.reset": "The computer was reset",
-  "computer.browser_cleared": "A person cleared the browser",
-  "computer.updated": "The computer was updated",
-  "computer.stopped": "A person pressed stop",
+  "agent.stream_stalled": t("The Bot stopped responding"),
+  "agent.tool_limit_refused": t("Too many tools for its model"),
+  "computer.policy_loaded": t("Boundary at start-up"),
+  "computer.isolation_loaded": t("Isolation at start-up"),
+  "computer.control_taken": t("A person took control"),
+  "computer.control_released": t("Control went back to the Bot"),
+  "computer.help_requested": t("The Bot asked for help"),
+  "computer.secret_requested": t("The Bot asked for a secret"),
+  "computer.secret_supplied": t("A person supplied a secret"),
+  "computer.reset": t("The computer was reset"),
+  "computer.browser_cleared": t("A person cleared the browser"),
+  "computer.updated": t("The computer was updated"),
+  "computer.stopped": t("A person pressed stop"),
 
-  "component.granted": "Granted to this Bot",
-  "component.revoked": "Taken away from this Bot",
-  "component.published": "Published. Every Bot can use it",
-  "component.unpublished": "Unpublished. No Bot can use it",
-  "component.draft_saved": "Draft saved, not yet published",
+  "component.granted": t("Granted to this Bot"),
+  "component.revoked": t("Taken away from this Bot"),
+  "component.published": t("Published. Every Bot can use it"),
+  "component.unpublished": t("Unpublished. No Bot can use it"),
+  "component.draft_saved": t("Draft saved, not yet published"),
   "component.refused": "Refused",
-  "component.function_granted": "Can read this",
-  "component.function_revoked": "Can no longer read this",
-  "component.function_called": "Read real data",
+  "component.function_granted": t("Can read this"),
+  "component.function_revoked": t("Can no longer read this"),
+  "component.function_called": t("Read real data"),
   "component.function_refused": "Refused",
   // A function failure is execution failure, not a policy refusal.
-  "component.function_failed": "Couldn't read it",
+  "component.function_failed": t("Couldn't read it"),
 
   // Not a call and not a decision: the tools this run was allowed to see. Worded so nobody reads it
   // as permission, which it is not — everything named was already granted.
-  "mcp.tools_discovered": "Tools offered for one run",
-  "mcp.call_succeeded": "Called on this Bot's behalf",
+  "mcp.tools_discovered": t("Tools offered for one run"),
+  "mcp.call_succeeded": t("Called on this Bot's behalf"),
   "mcp.call_rejected": "Blocked",
-  "mcp.call_failed": "The server didn't answer",
+  "mcp.call_failed": t("The server didn't answer"),
   // Not "Blocked": nothing about the Bot was judged, because nothing proved which Bot it was.
-  "mcp.callback_refused": "Couldn't confirm which Bot it was",
+  "mcp.callback_refused": t("Couldn't confirm which Bot it was"),
 
-  "configuration.changed": "Configuration changed",
-  "credential.created": "Credential saved",
+  "configuration.changed": t("Configuration changed"),
+  "credential.created": t("Credential saved"),
 };
 
 function hostOf(url: string): string {

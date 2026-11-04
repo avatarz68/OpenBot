@@ -29,6 +29,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { currentUserQueryOptions } from "@/lib/auth/queries";
 import { terminateMemberComputersMutationOptions } from "@/lib/enterprise/mutations";
+import { t } from "@/lib/i18n";
 import {
   setPersonAccessMutationOptions,
   setPersonRoleMutationOptions,
@@ -95,12 +96,16 @@ function PeoplePage() {
 
   return (
     <PageShell
-      description="Manage access for people who have signed in. Only admins can access the Admin pages."
-      title="People"
+      description={t(
+        "Manage access for people who have signed in. Only admins can access the Admin pages.",
+      )}
+      title={t("People")}
     >
       <PageSection
-        description="Addresses in INITIAL_ADMIN_EMAILS are always admins. You can't change them here."
-        title="Who is here"
+        description={t(
+          "Addresses in INITIAL_ADMIN_EMAILS are always admins. You can't change them here.",
+        )}
+        title={t("Who is here")}
       >
         {failure ? (
           <p className="mt-4 text-destructive text-sm" role="alert">
@@ -122,25 +127,25 @@ function PeoplePage() {
           is the opposite of what somebody looking for a colleague needs.
         */}
         <Input
-          aria-label="Search people"
+          aria-label={t("Search people")}
           className="mt-4"
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search by name or address"
+          placeholder={t("Search by name or address")}
           value={search}
         />
 
         {people.isPending ? null : people.error ? (
           <p className="mt-4 text-destructive text-sm" role="alert">
-            Couldn't load people. Reload the page.
+            {t("Couldn't load people. Reload the page.")}
           </p>
         ) : rows.length === 0 ? (
           <PageEmpty
             icon={query ? IconSearch : IconUsers}
-            title={query ? "No matches" : "Nobody has signed in yet"}
+            title={query ? t("No matches") : t("Nobody has signed in yet")}
           >
             {query
               ? `Nobody matches "${query}".`
-              : "People show here once they do."}
+              : t("People show here once they do.")}
           </PageEmpty>
         ) : (
           <PageRows>
@@ -179,7 +184,7 @@ function PeoplePage() {
                         size="sm"
                         variant="outline"
                       >
-                        Stop computers
+                        {t("Stop computers")}
                       </Button>
                       <Button
                         disabled={busy || isSelf || person.configuredAdmin}
@@ -226,7 +231,7 @@ function PeoplePage() {
             size="sm"
             variant="outline"
           >
-            {people.isFetchingNextPage ? "Loading…" : "Show more"}
+            {people.isFetchingNextPage ? "Loading…" : t("Show more")}
           </Button>
         ) : null}
       </PageSection>

@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { client } from "@/lib/client";
+import { t } from "@/lib/i18n";
 
 /**
  * A Bot's request to be signed in to a website, as the private form sees it.
@@ -66,7 +67,7 @@ export function signInRequestQueryOptions(id: string) {
     queryFn: async (): Promise<SignInRequest> =>
       (
         await client(`/api/sign-in-requests/${encodeURIComponent(id)}`, {
-          fallback: "Could not load this sign-in request",
+          fallback: t("Could not load this sign-in request"),
         })
       ).json(),
   });
@@ -80,7 +81,7 @@ export function pendingSignInRequestsQueryOptions() {
       (
         (await (
           await client("/api/sign-in-requests", {
-            fallback: "Could not load your sign-in requests",
+            fallback: t("Could not load your sign-in requests"),
           })
         ).json()) as { requests: SignInRequest[] }
       ).requests,
@@ -96,7 +97,7 @@ export function savedLoginsQueryOptions() {
     }> =>
       (
         await client("/api/passwords", {
-          fallback: "Could not load your passwords",
+          fallback: t("Could not load your passwords"),
         })
       ).json(),
   });

@@ -61,6 +61,7 @@ import {
   type EnterpriseOverview,
   enterpriseOverviewQueryOptions,
 } from "@/lib/enterprise/queries";
+import { t } from "@/lib/i18n";
 import { queryClient } from "@/query-client";
 
 export const Route = createFileRoute("/_authed/admin/proactive")({
@@ -70,19 +71,19 @@ export const Route = createFileRoute("/_authed/admin/proactive")({
 type Days = CheckInMetrics["days"];
 
 const PERIODS: Record<Days, string> = {
-  7: "Last 7 days",
-  30: "Last 30 days",
+  7: t("Last 7 days"),
+  30: t("Last 30 days"),
 };
 
 /** Why check-ins were skipped, in the order the page lists them. */
 const SKIPPED_BECAUSE: Record<CheckInSkipReason, string> = {
-  off_admin: "Turned off by an admin",
-  off_person: "Turned off by the person",
-  paused: "Bot paused",
-  capped: "Over the daily limit",
-  no_sources: "Nothing it could read",
-  unreachable: "Conversation gone",
-  busy: "Another one still running",
+  off_admin: t("Turned off by an admin"),
+  off_person: t("Turned off by the person"),
+  paused: t("Bot paused"),
+  capped: t("Over the daily limit"),
+  no_sources: t("Nothing it could read"),
+  unreachable: t("Conversation gone"),
+  busy: t("Another one still running"),
 };
 
 /** A count as people read it, with the thousands separated. */
@@ -121,12 +122,14 @@ export function CheckInsPage() {
 
   return (
     <PageShell
-      description="Bots check the apps people connected and tell them when something needs them, at most once an hour. They never act without asking."
+      description={t(
+        "Bots check the apps people connected and tell them when something needs them, at most once an hour. They never act without asking.",
+      )}
       title="Check-ins"
     >
       {overview.isPending ? null : overview.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't load check-in settings. Reload the page.
+          {t("Couldn't load check-in settings. Reload the page.")}
         </p>
       ) : (
         <CheckInSettings data={overview.data} />
@@ -159,15 +162,16 @@ function CheckInSettings({ data }: { data: EnterpriseOverview }) {
     <PageSection
       description={
         <>
-          These apply to everybody. To change who gets check-ins by role or
-          group, use{" "}
+          {t(
+            "These apply to everybody. To change who gets check-ins by role or group, use",
+          )}{" "}
           <Link className="underline" to="/admin/enterprise">
-            Enterprise controls
+            {t("Enterprise controls")}
           </Link>
           .
         </>
       }
-      title="Settings"
+      title={t("Settings")}
     >
       <PageRows>
         <Item size="sm">
@@ -178,8 +182,8 @@ function CheckInSettings({ data }: { data: EnterpriseOverview }) {
             <ItemTitle>Check-ins</ItemTitle>
             <ItemDescription>
               {on
-                ? "Bots check in for everybody."
-                : "Off. No Bot checks in for anybody."}
+                ? t("Bots check in for everybody.")
+                : t("Off. No Bot checks in for anybody.")}
               {overrides > 0
                 ? ` ${plural(overrides, "role or group override", "role or group overrides")} change that for some people.`
                 : ""}
@@ -210,7 +214,7 @@ function CheckInSettings({ data }: { data: EnterpriseOverview }) {
             <IconGauge />
           </ItemMedia>
           <ItemContent>
-            <ItemTitle>Daily limit</ItemTitle>
+            <ItemTitle>{t("Daily limit")}</ItemTitle>
             <ItemDescription>
               {`Up to ${plural(data.settings.proactiveDailyRuns, "check-in", "check-ins")} a day per Bot for each person`}
             </ItemDescription>
@@ -260,7 +264,7 @@ function Activity({
           onValueChange={(value) => onDays(Number(value) === 30 ? 30 : 7)}
           value={String(days)}
         >
-          <SelectTrigger aria-label="Period" size="sm">
+          <SelectTrigger aria-label={t("Period")} size="sm">
             <SelectValue>{PERIODS[days]}</SelectValue>
           </SelectTrigger>
           <SelectContent align="end">
@@ -271,12 +275,14 @@ function Activity({
           </SelectContent>
         </Select>
       }
-      description="Acceptance is how many items people started, out of the ones they started or hid."
-      title="Activity"
+      description={t(
+        "Acceptance is how many items people started, out of the ones they started or hid.",
+      )}
+      title={t("Activity")}
     >
       {metrics.isPending ? null : metrics.error ? (
         <p className="mt-4 text-destructive text-sm" role="alert">
-          Couldn't load check-in activity. Reload the page.
+          {t("Couldn't load check-in activity. Reload the page.")}
         </p>
       ) : (
         <>
@@ -286,10 +292,12 @@ function Activity({
                 <IconBellRinging />
               </ItemMedia>
               <ItemContent>
-                <ItemTitle>Pings sent</ItemTitle>
+                <ItemTitle>{t("Pings sent")}</ItemTitle>
                 <ItemDescription>
                   {metrics.data.pings.itemsPerPing === null
-                    ? "Each one folds a person's waiting items from every Bot into one message."
+                    ? t(
+                        "Each one folds a person's waiting items from every Bot into one message.",
+                      )
                     : `${metrics.data.pings.itemsPerPing.toFixed(1)} items in each, on average`}
                 </ItemDescription>
               </ItemContent>
@@ -301,8 +309,8 @@ function Activity({
             </Item>
           </PageRows>
           {metrics.data.bots.length === 0 ? (
-            <PageEmpty icon={IconRadar} title="No check-ins yet">
-              A Bot starts checking in once somebody talks to it.
+            <PageEmpty icon={IconRadar} title={t("No check-ins yet")}>
+              {t("A Bot starts checking in once somebody talks to it.")}
             </PageEmpty>
           ) : (
             <PageRows>
@@ -351,7 +359,9 @@ function BotRow({
       </ItemContent>
       <ItemActions>
         {bot.acceptance === null ? (
-          <span className="text-muted-foreground text-sm">No answers yet</span>
+          <span className="text-muted-foreground text-sm">
+            {t("No answers yet")}
+          </span>
         ) : (
           <span className="text-sm tabular-nums">
             {percent(bot.acceptance)} started
@@ -393,13 +403,15 @@ function BotDialog({
         <DialogBody className="mt-4 gap-6 overflow-y-auto">
           <div className="grid grid-cols-3 gap-4">
             <Stat
-              label="Acceptance"
+              label={t("Acceptance")}
               value={
-                bot.acceptance === null ? "None yet" : percent(bot.acceptance)
+                bot.acceptance === null
+                  ? t("None yet")
+                  : percent(bot.acceptance)
               }
             />
-            <Stat label="Items raised" value={number(bot.items.raised)} />
-            <Stat label="Sent in a ping" value={number(bot.pinged)} />
+            <Stat label={t("Items raised")} value={number(bot.items.raised)} />
+            <Stat label={t("Sent in a ping")} value={number(bot.pinged)} />
           </div>
           <Breakdown
             rows={[
@@ -425,7 +437,7 @@ function BotDialog({
               ["Cleared by the Bot", bot.items.cleared],
               ["Still open", bot.items.open],
             ]}
-            title="Items"
+            title={t("Items")}
           />
         </DialogBody>
         <DialogFooter className="mt-4">
@@ -505,11 +517,11 @@ function DailyLimitDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Daily limit</DialogTitle>
+          <DialogTitle>{t("Daily limit")}</DialogTitle>
         </DialogHeader>
         <DialogBody className="mt-4 gap-2">
           <Label htmlFor="check-in-daily-limit">
-            Check-ins a day per Bot, for each person
+            {t("Check-ins a day per Bot, for each person")}
           </Label>
           <Input
             id="check-in-daily-limit"
@@ -523,7 +535,7 @@ function DailyLimitDialog({
         </DialogBody>
         <DialogFooter className="mt-4">
           <Button onClick={onClose} size="sm" type="button" variant="outline">
-            Cancel
+            {t("Cancel")}
           </Button>
           <Button
             disabled={!valid || saving}

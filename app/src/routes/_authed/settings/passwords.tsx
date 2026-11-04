@@ -17,6 +17,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
+import { t } from "@/lib/i18n";
 import { deleteSavedLoginMutationOptions } from "@/lib/passwords/mutations";
 import { savedLoginsQueryOptions } from "@/lib/passwords/queries";
 import { queryClient } from "@/query-client";
@@ -36,21 +37,25 @@ function PasswordsPage() {
   const remove = useMutation(deleteSavedLoginMutationOptions(queryClient));
   return (
     <PageShell
-      title="Passwords"
-      description="Manage saved website logins. Bots cannot see your passwords, and you approve each use."
+      title={t("Passwords")}
+      description={t(
+        "Manage saved website logins. Bots cannot see your passwords, and you approve each use.",
+      )}
     >
-      <PageSection title="Saved logins">
+      <PageSection title={t("Saved logins")}>
         {logins.isPending ? null : logins.error ? (
           <p className="text-destructive text-sm" role="alert">
-            Couldn't load your passwords. Reload the page.
+            {t("Couldn't load your passwords. Reload the page.")}
           </p>
         ) : !logins.data.passwordManager ? (
-          <PageEmpty icon={IconLockOff} title="Saved passwords are off">
-            An admin turned them off. Your logins are kept but won't be offered.
+          <PageEmpty icon={IconLockOff} title={t("Saved passwords are off")}>
+            {t(
+              "An admin turned them off. Your logins are kept but won't be offered.",
+            )}
           </PageEmpty>
         ) : logins.data.logins.length === 0 ? (
-          <PageEmpty icon={IconKey} title="No saved logins yet">
-            Choose Save to Passwords when you sign a Bot in to a website.
+          <PageEmpty icon={IconKey} title={t("No saved logins yet")}>
+            {t("Choose Save to Passwords when you sign a Bot in to a website.")}
           </PageEmpty>
         ) : (
           <PageRows>
