@@ -91,7 +91,7 @@ Im echten Browser (Chromium), mit einer Attrappe als Modell, gegen den Server im
 - Nachricht an einen Bot, Antwort live
 - Verlauf nach Neuladen der Seite und nach Neustart des Servers
 - Stopp-Knopf bei einer langen Antwort, danach nächste Nachricht
-- Unterhaltung über „Neuer Chat“ mit einem Bot, Eintrag in der Seitenleiste, Wiederöffnen über die Adresse
+- Unterhaltung über „New chat“ mit einem Bot, Eintrag in der Seitenleiste, Wiederöffnen über die Adresse
 
 Noch nicht geprüft: ein echtes Sprachmodell, der Computer-Dienst der Bots (braucht Docker), Freigaben, mehrere Personen gleichzeitig, Betrieb hinter einem Reverse-Proxy.
 
