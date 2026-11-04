@@ -74,3 +74,6 @@ function printNodesShortly(node: typeof Node): void {
  * drawn calls `mock.module` itself and wins, because a later registration replaces this one.
  */
 mock.module("../src/lib/marks", () => ({ markFor: () => null }));
+
+// The tests read English. See src/lib/i18n/index.ts.
+(globalThis as { __OPENBOT_LOCALE__?: string }).__OPENBOT_LOCALE__ = "en";

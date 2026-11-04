@@ -207,6 +207,7 @@ type TenantChannel = {
 export type TenantPackage = {
   tenantId: string;
   productName: string;
+  defaultLocale?: string;
   stylesheet: string | null;
   agents: TenantAgent[];
   /** Remote agents explicitly disabled by a blank endpoint, not arbitrary removed YAML rows. */
@@ -254,6 +255,8 @@ export type ApplicationConfiguration = {
   brand: {
     tenantId: string;
     productName: string;
+    /** The language the app opens in for somebody who has not chosen one, e.g. `de`. */
+    defaultLocale?: string;
   };
 };
 
@@ -272,6 +275,9 @@ export function createApplicationConfiguration(
     brand: {
       tenantId: tenantPackage.tenantId,
       productName: tenantPackage.productName,
+      ...(tenantPackage.defaultLocale
+        ? { defaultLocale: tenantPackage.defaultLocale }
+        : {}),
     },
   };
 }
@@ -294,6 +300,15 @@ function asList(value: unknown, name: string): unknown[] {
   if (!Array.isArray(value)) {
     throw new Error(`${name} must be a list`);
   }
+  return value;
+}
+
+/** A language tag such as `de` or `pt-BR`. Which ones the app can show is the app's business. */
+function locale(value: unknown): string {
+  if (typeof value !== "string" || !/^[a-z]{2}(-[A-Z]{2})?$/.test(value))
+    throw new Error(
+      "tenant.default_locale must be a language tag such as de or pt-BR",
+    );
   return value;
 }
 
@@ -631,6 +646,9 @@ export function validateTenantPackage(files: PackageFiles): TenantPackage {
   return {
     tenantId: requiredString(tenant.id, "tenant.id"),
     productName: requiredString(tenant.product_name, "tenant.product_name"),
+    ...(tenant.default_locale === undefined
+      ? {}
+      : { defaultLocale: locale(tenant.default_locale) }),
     stylesheet: skin
       ? requiredString(skin.stylesheet, "skin.stylesheet")
       : null,

@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { fileURLToPath } from "node:url";
-import { loadTenantPackage } from "../src/tenant-package";
+import {
+  loadTenantPackage,
+  validateTenantPackage,
+} from "../src/tenant-package";
 
 describe("the ImPPPact tenant package", () => {
   test("loads with its own brand and the PPP Bots", async () => {
@@ -10,6 +13,7 @@ describe("the ImPPPact tenant package", () => {
 
     expect(tenantPackage.tenantId).toBe("impppact");
     expect(tenantPackage.productName).toBe("ImPPPactBot");
+    expect(tenantPackage.defaultLocale).toBe("de");
     const ids = tenantPackage.agents.map((agent) => agent.id);
     for (const id of [
       "general-assistant",
@@ -23,5 +27,19 @@ describe("the ImPPPact tenant package", () => {
     ]) {
       expect(ids).toContain(id);
     }
+  });
+
+  test("refuses a default language that is not a language tag", () => {
+    expect(() =>
+      validateTenantPackage({
+        brand: "tenant: { id: x, product_name: X, default_locale: Deutsch }",
+        agents: "agents: []",
+        channels: "channels: []",
+        model:
+          "model: { provider: openai, credential_secret_ref: k, default_model: m }",
+        knowledge: "sources: []",
+        themeCss: "",
+      } as never),
+    ).toThrow("default_locale");
   });
 });
