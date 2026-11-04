@@ -338,14 +338,14 @@ function auditColumns(
             onClick={column.getToggleSortingHandler()}
             type="button"
           >
-            When
+            {t("When")}
             {sorted === "asc" ? (
               <IconArrowUp className="size-3.5" />
             ) : (
               <IconArrowDown className="size-3.5" />
             )}
             <span className="sr-only">
-              {sorted === "asc" ? ", oldest first" : ", newest first"}
+              {sorted === "asc" ? t(", oldest first") : t(", newest first")}
             </span>
           </button>
         );
@@ -356,13 +356,13 @@ function auditColumns(
     {
       id: "what",
       accessorFn: (event) => whatText(event),
-      header: "What",
+      header: t("What"),
       cell: ({ row }) => whatText(row.original),
       enableSorting: false,
     },
     {
       id: "on",
-      header: "On",
+      header: t("On"),
       cell: ({ row }) => <OnCell event={row.original} />,
       enableSorting: false,
     },
@@ -370,7 +370,7 @@ function auditColumns(
       id: "bot",
       accessorFn: (event) => botText(event, nameFor) || "None",
       filterFn: anyOf,
-      header: "Bot",
+      header: t("Bot"),
       cell: ({ row }) => <BotCell event={row.original} nameFor={nameFor} />,
       enableSorting: false,
     },
@@ -386,7 +386,7 @@ function auditColumns(
     },
     {
       id: "decision",
-      header: "Decision",
+      header: t("Decision"),
       cell: ({ row }) => <DecisionCell event={row.original} />,
       enableSorting: false,
     },

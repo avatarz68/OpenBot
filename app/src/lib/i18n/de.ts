@@ -7,6 +7,8 @@
  */
 export const de: Record<string, string> = {
   " and ": " und ",
+  ", newest first": ", neueste zuerst",
+  ", oldest first": ", älteste zuerst",
   "A Bot can call this tool only while its switch is on. Turning it off applies from the next call.":
     "Ein Bot kann dieses Werkzeug nur aufrufen, solange sein Schalter an ist. Ausschalten gilt ab dem nächsten Aufruf.",
   "A Bot no longer here": "Ein Bot, der nicht mehr da ist",
@@ -172,6 +174,7 @@ export const de: Record<string, string> = {
     "Bevor ein Bot etwas tut, das Ihre Konten betreffen oder Informationen weitergeben könnte, prüft OpenBot es gegen Ihre Anfrage und Ihre Regeln. Wenn es sich nicht entscheiden kann, fragt es Sie.",
   Behaviour: "Verhalten",
   Blocked: "Blockiert",
+  Bot: "Bot",
   "Bot not found": "Bot nicht gefunden",
   "Bot owners can give it to their Bots":
     "Bot-Besitzer können es ihren Bots geben",
@@ -490,6 +493,7 @@ export const de: Record<string, string> = {
   "Daily limit": "Tageslimit",
   "Dark theme": "Dunkles Farbschema",
   "Days without use": "Tage ohne Nutzung",
+  Decision: "Entscheidung",
   Decline: "Ablehnen",
   "Defaults plus team allowlist": "Standard plus Zulassungsliste des Teams",
   "Define actions that Bots must never take. OpenBot checks these rules before a Bot acts on its computer or in a connected app.":
@@ -954,6 +958,7 @@ export const de: Record<string, string> = {
     "Aus. Kein Bot fragt für irgendjemanden nach.",
   "Off. Set SCIM_BEARER_TOKEN to accept provisioning from Okta, Entra or another directory.":
     "Aus. Setzen Sie SCIM_BEARER_TOKEN, um die Bereitstellung aus Okta, Entra oder einem anderen Verzeichnis anzunehmen.",
+  On: "Worauf",
   "On by default once you message just this Bot. It reads the apps it can use and tells you when something needs you, at most once an hour. It also forms memories for you to review. It can only read: it can't send messages, change anything in an app, or use a browser or computer. If you turn it off or remove it, it stays that way.":
     "Standardmäßig eingeschaltet, sobald Sie nur diesem Bot schreiben. Er liest die Apps, die er nutzen darf, und sagt Ihnen höchstens einmal pro Stunde Bescheid, wenn etwas Sie braucht. Außerdem bildet er Erinnerungen, die Sie prüfen können. Er kann nur lesen: Er kann keine Nachrichten senden, nichts in einer App ändern und keinen Browser oder Computer nutzen. Wenn Sie ihn ausschalten oder entfernen, bleibt das so.",
   "On. A matching action goes ahead and is recorded in Audit, so you can see what a rule catches before it stops anything.":
@@ -1509,6 +1514,7 @@ export const de: Record<string, string> = {
     "Ihre Einrichtung konnte nicht geladen werden. Versuchen Sie es erneut, um fortzufahren.",
   Welcome: "Willkommen",
   "Welcome to {name}": "Willkommen bei {name}",
+  What: "Was",
   "What Bots can do": "Was Bots können",
   "What Bots can reach": "Worauf Bots zugreifen können",
   "What Isolated means": "Was „Isoliert“ bedeutet",
@@ -1533,6 +1539,7 @@ export const de: Record<string, string> = {
   "What to read": "Was gelesen werden soll",
   "What your Bots remember about you is in":
     "Was Ihre Bots über Sie wissen, finden Sie unter",
+  When: "Wann",
   "When a Bot's check-in finds something that needs you, it shows up here.":
     "Wenn bei der Rückfrage eines Bots etwas auftaucht, das Sie braucht, erscheint es hier.",
   "When there are more, you can let this Bot ask them here.":
