@@ -13,6 +13,7 @@ import { Streamdown } from "streamdown";
 import { Badge, GalleryFrame, type Tone } from "@/components/gallery/frame";
 import { Button } from "@/components/ui/button";
 import { ItemMedia } from "@/components/ui/item";
+import { t } from "@/lib/i18n";
 import { markdownComponents, markdownPlugins } from "@/lib/markdown";
 import { asText, REFUSAL_MARKER } from "@/lib/plugins/tool-result";
 import { subagentStepsQueryOptions } from "@/lib/subagents/queries";
@@ -50,7 +51,7 @@ export function SubagentCard({
   const answer = result === undefined ? undefined : asText(result);
   if (answer?.startsWith(REFUSAL_MARKER))
     return (
-      <ToolLine detail={task} label="Subtask" refused>
+      <ToolLine detail={task} label={t("Subtask")} refused>
         <p className="text-sm">{answer.slice(REFUSAL_MARKER.length).trim()}</p>
       </ToolLine>
     );
@@ -94,12 +95,12 @@ function SubtaskFrame({
   const status: { tone: Tone; words: string } = running
     ? { tone: "neutral", words: "Working" }
     : !settled
-      ? { tone: "neutral", words: "Not completed" }
+      ? { tone: "neutral", words: t("Not completed") }
       : "answer" in settled
         ? { tone: "positive", words: "Done" }
         : "handedBack" in settled
-          ? { tone: "caution", words: "Needs your approval" }
-          : { tone: "caution", words: "Didn't finish" };
+          ? { tone: "caution", words: t("Needs your approval") }
+          : { tone: "caution", words: t("Didn't finish") };
 
   const stepList = (
     <ol className="space-y-2 text-xs">
@@ -125,7 +126,7 @@ function SubtaskFrame({
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
             <p className="min-w-0 truncate text-sm font-medium">
-              Subtask
+              {t("Subtask")}
               {progress ? (
                 <span className="font-normal text-muted-foreground">
                   {" "}
@@ -181,7 +182,7 @@ function SubtaskFrame({
               ▸
             </span>
             {steps.length === 1
-              ? "Show the step"
+              ? t("Show the step")
               : `Show ${steps.length} steps`}
           </summary>
           <div className="mt-2 pl-5">{stepList}</div>
@@ -203,7 +204,7 @@ function HandedBack({ tool, args }: { tool: string; args: unknown }) {
       : [];
   return (
     <section
-      aria-label="Needs your approval"
+      aria-label={t("Needs your approval")}
       className="mt-3 space-y-2 rounded-lg border p-3 text-sm"
     >
       <p className="flex items-start gap-2 font-medium">
@@ -217,8 +218,9 @@ function HandedBack({ tool, args }: { tool: string; args: unknown }) {
         </span>
       </p>
       <p className="text-muted-foreground">
-        It stopped before this step, so you're asked about it in this
-        conversation instead.
+        {t(
+          "It stopped before this step, so you're asked about it in this conversation instead.",
+        )}
       </p>
       {inputs.length ? (
         <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-xs">
@@ -274,7 +276,7 @@ function Clamped({ children }: { children: React.ReactNode }) {
           variant="ghost"
         >
           {open ? <IconChevronUp /> : <IconChevronDown />}
-          {open ? "Show less" : "Show more"}
+          {open ? t("Show less") : t("Show more")}
         </Button>
       ) : null}
     </>

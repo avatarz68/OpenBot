@@ -5,6 +5,12 @@ import {
 } from "@openbot/shared/connect-prompt";
 import { researchRoleOfTool } from "@openbot/shared/research";
 import {
+  connectorName,
+  humanise,
+  ownToolLabel,
+  readToolName,
+} from "@openbot/shared/tool-name";
+import {
   IconFileText,
   IconFolder,
   IconPlug,
@@ -16,13 +22,8 @@ import { useCallback, useContext, useMemo, useSyncExternalStore } from "react";
 import { Streamdown } from "streamdown";
 import { PendingApprovals } from "@/components/approvals/inline-approval";
 import { codingLook, foreignCodingCall } from "@/lib/copilot/coding-calls";
+import { t } from "@/lib/i18n";
 import { markdownComponents, markdownPlugins } from "@/lib/markdown";
-import {
-  connectorName,
-  humanise,
-  ownToolLabel,
-  readToolName,
-} from "@openbot/shared/tool-name";
 import {
   asText,
   forDisplay,
@@ -31,8 +32,8 @@ import {
 } from "@/lib/plugins/tool-result";
 import { readTeamBotConsent } from "@/lib/team-bots";
 import { browserStepDetails, isBrowserStep } from "./browser-activity";
-import { codingOutcome, lookStep } from "./coding-tool-cards";
 import type { VisibleChatItem } from "./chat-messages";
+import { codingOutcome, lookStep } from "./coding-tool-cards";
 import { ToolLine } from "./tool-line";
 
 type ToolItem = Extract<VisibleChatItem, { kind: "tool" }>;
@@ -316,7 +317,7 @@ export function stepDetails(step: ToolItem): StepDetails {
     return {
       id: step.id,
       kind: "browser",
-      label: browser.label ?? "Used the browser",
+      label: browser.label ?? t("Used the browser"),
       ...(browser.title ? { detail: browser.title } : {}),
       ...(browser.href ? { href: browser.href } : {}),
       pending: browser.pending,
@@ -515,15 +516,15 @@ function StepStatus({ step, active }: { step: StepDetails; active: boolean }) {
   if (step.pending)
     return (
       <span className="shrink-0 text-muted-foreground">
-        {active ? "In progress" : "Not completed"}
+        {active ? t("In progress") : t("Not completed")}
       </span>
     );
   if (step.refused)
-    return <span className="shrink-0 text-destructive">Blocked</span>;
+    return <span className="shrink-0 text-destructive">{t("Blocked")}</span>;
   if (step.failed)
     return (
       <span className="shrink-0 text-amber-600 dark:text-amber-500">
-        Didn't work
+        {t("Didn't work")}
       </span>
     );
   return null;
@@ -559,7 +560,7 @@ export function StepRow({
   const reason =
     step.failed && step.kind === "browser" ? (
       <p className="mt-0.5 pl-6 text-destructive">
-        {step.reason ?? "Couldn't finish this step."}
+        {step.reason ?? t("Couldn't finish this step.")}
       </p>
     ) : null;
   // A browser step says everything it has in its line. Anything else opens to what it was given

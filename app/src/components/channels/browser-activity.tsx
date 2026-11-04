@@ -1,15 +1,16 @@
+import { t } from "@/lib/i18n";
 import type { VisibleChatItem } from "./chat-messages";
 
 type BrowserStep = Extract<VisibleChatItem, { kind: "tool" }>;
 
 const labels: Record<string, string> = {
-  computer_navigate: "Opened page",
-  computer_read: "Read page",
-  computer_snapshot: "Inspected page",
-  computer_click: "Clicked on page",
-  computer_type: "Filled in field",
-  computer_key: "Pressed key",
-  computer_scroll: "Scrolled page",
+  computer_navigate: t("Opened page"),
+  computer_read: t("Read page"),
+  computer_snapshot: t("Inspected page"),
+  computer_click: t("Clicked on page"),
+  computer_type: t("Filled in field"),
+  computer_key: t("Pressed key"),
+  computer_scroll: t("Scrolled page"),
 };
 
 /** Whether a tool call is one of the browser steps a tool group draws with its page link. */

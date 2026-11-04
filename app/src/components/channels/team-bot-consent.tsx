@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { t } from "@/lib/i18n";
 import {
   type TeamBotConsentDecision,
   teamBotConsentMutationOptions,
@@ -36,12 +37,12 @@ export function TeamBotConsentCard({
       {chosen ? (
         <p className="text-muted-foreground" role="status">
           {chosen === "skip"
-            ? "Skipped. Nothing of yours was used."
+            ? t("Skipped. Nothing of yours was used.")
             : chosen === "allow_once"
-              ? "Allowed once. Ask the Bot to try again."
+              ? t("Allowed once. Ask the Bot to try again.")
               : chosen === "allow_all_team_bots"
-                ? "Always allowed for every Team Bot. Ask it to try again."
-                : "Always allowed for this Bot. Ask it to try again."}
+                ? t("Always allowed for every Team Bot. Ask it to try again.")
+                : t("Always allowed for this Bot. Ask it to try again.")}
         </p>
       ) : (
         <div className="flex flex-wrap gap-2">
@@ -50,7 +51,7 @@ export function TeamBotConsentCard({
             onClick={() => choose("allow_once")}
             size="sm"
           >
-            Allow once
+            {t("Allow once")}
           </Button>
           <Button
             disabled={answer.isPending}
@@ -58,7 +59,7 @@ export function TeamBotConsentCard({
             size="sm"
             variant="outline"
           >
-            Always allow for this Bot
+            {t("Always allow for this Bot")}
           </Button>
           <Button
             disabled={answer.isPending}
@@ -66,7 +67,7 @@ export function TeamBotConsentCard({
             size="sm"
             variant="outline"
           >
-            Always allow for all Team Bots
+            {t("Always allow for all Team Bots")}
           </Button>
           <Button
             disabled={answer.isPending}

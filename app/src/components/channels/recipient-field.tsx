@@ -14,6 +14,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { agentListQueryOptions } from "@/lib/agents/queries";
+import { t } from "@/lib/i18n";
 
 /**
  * Who a conversation that does not exist yet is with.
@@ -61,9 +62,9 @@ export function RecipientField({
         {isFull ? null : (
           <InputGroup className="h-8 w-56 border-none bg-transparent">
             <InputGroupInput
-              aria-label="Choose a Bot"
+              aria-label={t("Choose a Bot")}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Choose a Bot…"
+              placeholder={t("Choose a Bot…")}
               value={search}
             />
             <InputGroupAddon />
@@ -96,7 +97,7 @@ export function RecipientField({
           ))}
           {matches.length === 0 ? (
             <li className="px-2 py-1.5 text-sm text-muted-foreground">
-              No Bot by that name.
+              {t("No Bot by that name.")}
             </li>
           ) : null}
         </ul>

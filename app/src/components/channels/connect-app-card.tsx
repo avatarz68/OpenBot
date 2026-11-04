@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useConnectInNewTab } from "@/components/plugins/connect-in-new-tab";
 import { Button } from "@/components/ui/button";
 import { type CardPlace, useCarryOn } from "@/lib/copilot/carry-on";
+import { t } from "@/lib/i18n";
 import {
   connectionsQueryOptions,
   personalConnections,
@@ -105,7 +106,7 @@ export function ConnectAppCard({
           </p>
           {offer ? (
             <Button onClick={offer} size="sm">
-              Continue
+              {t("Continue")}
             </Button>
           ) : null}
         </div>
@@ -117,7 +118,7 @@ export function ConnectAppCard({
             params={{ key: serverId }}
             to="/connections/$key"
           >
-            Enter it on {title}'s page
+            {t("Enter it on {title}'s page", { title })}
           </Link>
           , then ask again.
         </p>
@@ -125,16 +126,16 @@ export function ConnectAppCard({
         <div className="flex flex-wrap items-center gap-3">
           {/* The heading above already names the app; the button says what pressing it does. */}
           <Button disabled={pending} onClick={open} size="sm">
-            {waiting ? `Waiting for ${title}…` : "Connect"}
+            {waiting ? `Waiting for ${title}…` : t("Connect")}
           </Button>
           {waiting ? (
             <p className="text-muted-foreground text-sm" role="status">
-              Finish in the tab that opened, then come back here.
+              {t("Finish in the tab that opened, then come back here.")}
             </p>
           ) : null}
           {blockedUrl ? (
             <p className="text-sm" role="status">
-              This browser blocked the tab.{" "}
+              {t("This browser blocked the tab.")}{" "}
               <a
                 className="underline underline-offset-2"
                 href={blockedUrl}

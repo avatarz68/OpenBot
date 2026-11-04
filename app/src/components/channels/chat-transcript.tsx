@@ -651,7 +651,7 @@ function RoutineFiring({ instruction }: { instruction: string }) {
     <div className="flex min-w-0 items-baseline gap-2 text-muted-foreground text-sm">
       <IconClock aria-hidden className="size-4 shrink-0 translate-y-0.5" />
       <span className="min-w-0">
-        <span className="font-medium">Routine ran.</span>{" "}
+        <span className="font-medium">{t("Routine ran.")}</span>{" "}
         <span className="whitespace-pre-wrap">{instruction}</span>
       </span>
     </div>
@@ -686,8 +686,8 @@ function ResponsibilityFiring({
       <IconClock aria-hidden className="size-4 shrink-0 translate-y-0.5" />
       <div className="min-w-0">
         <p>
-          <span className="font-medium">Responsibility ran.</span> Trigger:{" "}
-          {describeTrigger(turn.trigger)}
+          <span className="font-medium">{t("Responsibility ran.")}</span>{" "}
+          {t("Trigger:")} {describeTrigger(turn.trigger)}
         </p>
         <p className="whitespace-pre-wrap">{turn.instruction}</p>
         <details className="group mt-1">
@@ -1166,7 +1166,7 @@ function SentAttachmentTile({ attachment }: { attachment: SentAttachment }) {
           <p className="truncate font-medium text-sm" title={filename}>
             {filename ?? t("Untitled file")}
           </p>
-          <p className="text-muted-foreground text-xs">Attachment</p>
+          <p className="text-muted-foreground text-xs">{t("Attachment")}</p>
         </div>
       </div>
     );
@@ -1175,7 +1175,7 @@ function SentAttachmentTile({ attachment }: { attachment: SentAttachment }) {
   return (
     <AttachmentLightbox filename={filename} url={url}>
       <img
-        alt={filename ? `Attachment: ${filename}` : "Attachment"}
+        alt={filename ? `Attachment: ${filename}` : t("Attachment")}
         className="size-32 rounded-xl object-cover"
         onError={() => setFailedToLoad(true)}
         src={url}
@@ -1257,7 +1257,7 @@ export function LightboxPicture({
 
   return (
     <img
-      alt={filename ?? "Attachment"}
+      alt={filename ?? t("Attachment")}
       className="max-h-[88svh] max-w-[92vw] rounded-lg object-contain"
       onError={() => setFailedToLoad(true)}
       src={url}
@@ -1291,7 +1291,7 @@ function AttachmentLightbox({
   filename?: string;
   url: string;
 }) {
-  const label = filename ?? "Attachment";
+  const label = filename ?? t("Attachment");
   /*
    * Controlled only so that clicking the dark space around the picture closes it, the way every
    * lightbox a reader has used does. The popup covers the viewport (see below), so it — not the

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { setChannelPinnedMutationOptions } from "@/lib/channels/mutations";
 import { channelListQueryOptions } from "@/lib/channels/queries";
+import { t } from "@/lib/i18n";
 import { DeleteConversationDialog } from "./delete-conversation-dialog";
 
 /**
@@ -47,12 +48,12 @@ export function ConversationActions({
     <section className="grid gap-2">
       {/* Headed like the profile's own sections, so it reads as about the conversation, not the Bot. */}
       <h2 className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        This conversation
+        {t("This conversation")}
       </h2>
       <div className="flex flex-col gap-2">
         {/* The heading names the conversation, so the labels drop it; screen readers still hear it. */}
         <Button
-          aria-label={pinned ? "Unpin conversation" : "Pin conversation"}
+          aria-label={pinned ? t("Unpin conversation") : t("Pin conversation")}
           className="w-full text-sm!"
           disabled={pinned === undefined || setPinned.isPending}
           onClick={() => setPinned.mutate({ channelId, pinned: !pinned })}
@@ -62,13 +63,13 @@ export function ConversationActions({
           {pinned ? "Unpin" : "Pin"}
         </Button>
         <Button
-          aria-label="Delete conversation…"
+          aria-label={t("Delete conversation…")}
           className="w-full text-sm!"
           onClick={() => setConfirming(true)}
           variant="destructive"
         >
           <IconTrash />
-          Delete…
+          {t("Delete…")}
         </Button>
       </div>
       {/* No toast in this app: why a pin did not take is said where it was asked for. */}

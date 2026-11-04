@@ -787,14 +787,16 @@ export function ChannelChat({
       loadVoiceArchive(channel.id),
       new Promise<never>((_resolve, reject) => {
         voiceHistoryTimer = setTimeout(
-          () => reject(new Error("Voice history timed out")),
+          () => reject(new Error(t("Voice history timed out"))),
           2000,
         );
       }),
     ])
       .catch(() => {
         setVoiceContextNotice(
-          "Couldn’t bring in what was said on the call. You may need to repeat it.",
+          t(
+            "Couldn’t bring in what was said on the call. You may need to repeat it.",
+          ),
         );
         return cachedVoiceArchive(channel.id);
       })
@@ -947,7 +949,9 @@ export function ChannelChat({
     // Voice and typed requests share this turn boundary, including gaps between frontend tools.
     if (turnsRef.current > 0 || agentRef.current.isRunning) {
       throw new Error(
-        "This Bot is still working on something. Wait for it, or stop it first.",
+        t(
+          "This Bot is still working on something. Wait for it, or stop it first.",
+        ),
       );
     }
 
@@ -1044,7 +1048,7 @@ export function ChannelChat({
         send: (text) => sayRef.current(text),
       });
       if (started !== stopEpoch.current)
-        throw new Error("The user stopped this task before it completed.");
+        throw new Error(t("The user stopped this task before it completed."));
       return answer;
     },
   });
@@ -1187,8 +1191,9 @@ export function ChannelChat({
                     className="pb-2 text-sm text-muted-foreground"
                     role="status"
                   >
-                    This Bot was deleted. You can still read this conversation,
-                    but the Bot can't reply.
+                    {t(
+                      "This Bot was deleted. You can still read this conversation, but the Bot can't reply.",
+                    )}
                   </p>
                 )}
               </>

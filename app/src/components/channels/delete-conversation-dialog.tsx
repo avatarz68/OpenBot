@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { deleteChannelMutationOptions } from "@/lib/channels/mutations";
+import { t } from "@/lib/i18n";
 
 /**
  * Confirms deleting a conversation, naming it, and deletes it.
@@ -61,7 +62,7 @@ export function DeleteConversationDialog({
         <DialogHeader>
           <DialogTitle>Delete {name}?</DialogTitle>
           <DialogDescription>
-            It disappears for everyone in the conversation.
+            {t("It disappears for everyone in the conversation.")}
           </DialogDescription>
         </DialogHeader>
         {deleteChannel.error ? (

@@ -14,6 +14,7 @@ import {
   groupQueryOptions,
   sendGroupMessageMutationOptions,
 } from "@/lib/groups";
+import { t } from "@/lib/i18n";
 import { markdownComponents, markdownPlugins } from "@/lib/markdown";
 import { newId } from "@/lib/new-id";
 import { ChannelAvatar } from "./avatar";
@@ -96,7 +97,9 @@ export function GroupChat({ channelId }: { channelId: string }) {
         >
           {messages.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Say something to {bots.map((bot) => bot.name).join(" and ")}.
+              {t("Say something to {names}.", {
+                names: bots.map((bot) => bot.name).join(t(" and ")),
+              })}
               Every Bot answers in turn; start with @Name to ask just one.
             </p>
           ) : null}
@@ -106,10 +109,10 @@ export function GroupChat({ channelId }: { channelId: string }) {
               message={message}
               name={
                 message.agentId
-                  ? (names.get(message.agentId) ?? "A Bot no longer here")
+                  ? (names.get(message.agentId) ?? t("A Bot no longer here"))
                   : message.ownerUserId === me?.id
                     ? "You"
-                    : "A teammate"
+                    : t("A teammate")
               }
               answeredBy={
                 message.answeredBy
@@ -195,11 +198,11 @@ function GroupLine({
             className="tool-line-running text-sm text-muted-foreground"
             role="status"
           >
-            Thinking
+            {t("Thinking")}
           </p>
         ) : message.status === "waiting" ? (
           <p className="text-sm text-muted-foreground">
-            {message.reason ?? "Waiting for your response."}{" "}
+            {message.reason ?? t("Waiting for your response.")}{" "}
             <Link
               className="underline"
               params={{ agentId: message.agentId }}

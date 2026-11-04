@@ -4,7 +4,7 @@ KI-Assistent für die Arbeit von ImPPPact an Public-Private-Partnership-Projekte
 
 ImPPPactBot ist ein Fork von [CopilotKit/openbot](https://github.com/CopilotKit/openbot) (MIT-Lizenz, siehe [LICENSE](LICENSE)). Die allgemeine Beschreibung des Upstream-Projekts steht unverändert in [README.openbot.md](README.openbot.md).
 
-> **Stand:** Beta. Chat, Stopp, Kanäle und Verlauf sind im Browser geprüft (siehe [Stand der Prüfung](#stand-der-prüfung)). Ein Durchlauf mit einem echten Sprachmodell und der vollständige Start über `scripts/start.sh` mit Docker stehen noch aus. Die Oberfläche ist noch englisch.
+> **Stand:** Beta. Chat, Stopp, Kanäle und Verlauf sind im Browser geprüft (siehe [Stand der Prüfung](#stand-der-prüfung)). Ein Durchlauf mit einem echten Sprachmodell und der vollständige Start über `scripts/start.sh` mit Docker stehen noch aus. Die Oberfläche ist teilweise deutsch (siehe [Deutsche Oberfläche](#deutsche-oberfläche)).
 
 ## Die Bots
 
@@ -74,6 +74,19 @@ cd app && bun run dev --host 127.0.0.1 --port 3010
 ```
 
 Ohne Anmeldedienst gilt jede Anfrage als ein lokaler Administrator (`OPENBOT_SINGLE_USER=true`). Für mehrere Personen die Anmeldung (Google, Microsoft oder Okta) einrichten, wie in [README.openbot.md](README.openbot.md#sign-in) beschrieben.
+
+## Deutsche Oberfläche
+
+Die App öffnet auf Deutsch, weil `examples/impppact/brand.yaml` `default_locale: de` setzt. Jede Person kann unter Einstellungen → Sprache auf Englisch umstellen (gespeichert im Browser). Ohne Angabe im Mandanten gilt die Sprache des Browsers, sonst Englisch.
+
+Übersetzt sind die täglichen Wege: Seitenleiste, Chat mit Eingabefeld und Meldungen, neue Unterhaltung, Gruppen, Sprachanruf, Verbindungen, Fähigkeiten, Einstellungen und der Einstieg. **Noch englisch** sind unter anderem Admin, die Seiten eines einzelnen Bots (Zugriff, Aktivität, Routinen, Gedächtnis), Freigaben, Audit, Passwörter, Komponenten-Galerie und die Skins. Die Bots antworten unabhängig davon in der Sprache der Anfrage.
+
+So kommt ein Text dazu:
+
+1. Im Quelltext `t("English text")` aus `@/lib/i18n` verwenden. Der englische Text ist der Schlüssel. Werte stehen benannt darin: `t("Hello, {name}", { name })`.
+2. In `app/src/lib/i18n/de.ts` die deutsche Übersetzung unter demselben Schlüssel eintragen („Sie“, kurze Sätze, Wortschatz nach dem Glossar in `.claude/skills/openbot-copy`).
+
+`bun test app/tests/i18n.test.ts` schlägt fehl, wenn ein `t()`-Text keine Übersetzung hat oder die Übersetzung andere `{Werte}` enthält. Fehlt eine Übersetzung zur Laufzeit, zeigt die App den englischen Text.
 
 ## Tests
 

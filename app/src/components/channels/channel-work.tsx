@@ -1,5 +1,6 @@
 import { AbstractAvatar } from "@/components/agents/abstract-avatar";
 import type { ChannelWork } from "@/lib/channels/queries";
+import { t } from "@/lib/i18n";
 import { ProgressRow } from "./progress-row";
 
 /** A Bot as this person knows it: its name and the seed its avatar is drawn from. */
@@ -52,7 +53,7 @@ export function ChannelWorkRows({
 
 function labelFor(entry: ChannelWork, name: string | null): string {
   if (entry.kind === "handoff") {
-    return name ? `Asking ${name}…` : "Asking another Bot…";
+    return name ? `Asking ${name}…` : t("Asking another Bot…");
   }
-  return name ? `${name} is running a routine…` : "A routine is running…";
+  return name ? `${name} is running a routine…` : t("A routine is running…");
 }

@@ -11,10 +11,11 @@ import {
 } from "@tabler/icons-react";
 import { structuredPatch } from "diff";
 import { type ReactNode, useState } from "react";
-import { byPosition } from "@/components/gallery/positions";
 import { Badge, GalleryFrame } from "@/components/gallery/frame";
+import { byPosition } from "@/components/gallery/positions";
 import { Button } from "@/components/ui/button";
 import type { Look } from "@/lib/copilot/coding-calls";
+import { t } from "@/lib/i18n";
 import { asText } from "@/lib/plugins/tool-result";
 import { cn } from "@/lib/utils";
 import { ToolLine } from "./tool-line";
@@ -167,14 +168,14 @@ function OutcomeStatus({
   if (outcome.state === "stopped")
     return (
       <span className="shrink-0 text-xs text-muted-foreground">
-        Not completed
+        {t("Not completed")}
       </span>
     );
   if (outcome.state === "failed")
     return (
       <span className="shrink-0 text-xs text-amber-600 dark:text-amber-500">
         {outcome.exitCode === undefined
-          ? "Didn't work"
+          ? t("Didn't work")
           : `Exit code ${outcome.exitCode}`}
       </span>
     );
@@ -209,7 +210,7 @@ function Folded({
         >
           {open ? <IconChevronUp /> : <IconChevronDown />}
           {open
-            ? "Show less"
+            ? t("Show less")
             : `Show ${plural(total - limit, "more line", "more lines")}`}
         </Button>
       ) : null}
@@ -232,7 +233,7 @@ export function CommandCard({
     <CodingFrame
       aside={<OutcomeStatus outcome={outcome} running="Running" />}
       icon={<IconTerminal2 className="size-4" />}
-      label="Ran a command"
+      label={t("Ran a command")}
       title={<span title={command}>{command}</span>}
     >
       {lines.length ? (
@@ -326,7 +327,7 @@ export function DiffCard({
         <>
           {replaceAll ? (
             <span className="shrink-0 text-xs text-muted-foreground">
-              All occurrences
+              {t("All occurrences")}
             </span>
           ) : null}
           {added || removed ? (
@@ -344,7 +345,7 @@ export function DiffCard({
         </>
       }
       icon={<Icon className="size-4" />}
-      label={kind === "write" ? "Wrote a file" : "Edited a file"}
+      label={kind === "write" ? t("Wrote a file") : t("Edited a file")}
       title={<span title={path}>{fileName(path)}</span>}
     >
       {rows.length ? (
@@ -383,7 +384,7 @@ export function DiffCard({
                       <span className="flex-1 whitespace-pre pr-3">
                         {row.kind === "same" ? null : (
                           <span className="sr-only">
-                            {row.kind === "add" ? "Added: " : "Removed: "}
+                            {row.kind === "add" ? t("Added: ") : t("Removed: ")}
                           </span>
                         )}
                         {row.text || " "}
@@ -408,7 +409,7 @@ type Todo = {
 
 const TODO_STATES = {
   completed: "Done",
-  in_progress: "In progress",
+  in_progress: t("In progress"),
   pending: "Not started",
 } as const;
 

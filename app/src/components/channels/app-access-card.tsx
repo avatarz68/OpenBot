@@ -10,6 +10,7 @@ import { agentQueryOptions } from "@/lib/agents/queries";
 import { type AppAccess, botAppQueryOptions } from "@/lib/app-access/queries";
 import { useDeclaredBotId } from "@/lib/copilot/active-bot";
 import { type CardPlace, useCarryOn } from "@/lib/copilot/carry-on";
+import { t } from "@/lib/i18n";
 import { ConnectAppCard } from "./connect-app-card";
 
 /**
@@ -135,7 +136,7 @@ function LiveAppAccessCard({
       ) : offer ? (
         <div className="flex justify-end">
           <Button onClick={offer} size="sm">
-            Continue
+            {t("Continue")}
           </Button>
         </div>
       ) : null}
