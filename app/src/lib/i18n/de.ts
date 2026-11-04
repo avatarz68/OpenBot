@@ -140,6 +140,8 @@ export const de: Record<string, string> = {
   "Choose a value": "Wert auswählen",
   "Choose the language for menus and messages in this browser.":
     "Wählen Sie die Sprache für Menüs und Meldungen in diesem Browser.",
+  "Choose the name OpenBot displays for you.":
+    "Wählen Sie den Namen, den OpenBot für Sie anzeigt.",
   "Choose what to read": "Auswählen, was gelesen werden soll",
   "Choose when your Bots ask before they change things. Rules here apply to all of them.":
     "Legen Sie fest, wann Ihre Bots vor Änderungen nachfragen. Regeln hier gelten für alle.",
@@ -351,6 +353,7 @@ export const de: Record<string, string> = {
   "From {source}": "Aus {source}",
   General: "Allgemein",
   "Generate key": "Schlüssel erzeugen",
+  "Get started": "Los geht’s",
   Goals: "Ziele",
   "Group, or *": "Gruppe oder *",
   Groups: "Gruppen",
@@ -423,6 +426,7 @@ export const de: Record<string, string> = {
   Learning: "Lernen",
   "Leave this group": "Gruppe verlassen",
   "Let members set personal rules": "Mitgliedern eigene Regeln erlauben",
+  "Let's get to it.": "Dann legen wir los.",
   "Listening to you": "Hört Ihnen zu",
   "Load more conversations": "Weitere Unterhaltungen laden",
   "Load older conversations to search more of your history.":
@@ -454,6 +458,7 @@ export const de: Record<string, string> = {
   "Mute your microphone · you’ll still hear the Bot":
     "Mikrofon stummschalten · Sie hören den Bot weiterhin",
   "My project documents": "Meine Projektdokumente",
+  Name: "Name",
   "Needs you": "Braucht Sie",
   "Needs your approval": "Braucht Ihre Freigabe",
   "New Bot": "Neuer Bot",
@@ -563,6 +568,7 @@ export const de: Record<string, string> = {
   Preferences: "Einstellungen",
   "Pressed key": "Taste gedrückt",
   Private: "Privat",
+  Profile: "Profil",
   Progress: "Fortschritt",
   Public: "Öffentlich",
   "Publish to team": "Für das Team veröffentlichen",
@@ -631,11 +637,13 @@ export const de: Record<string, string> = {
     "Läuft auf dem Computer der Person, die ihn nutzt.",
   "Runs on your computer, alongside your other Bots.":
     "Läuft auf Ihrem Computer, neben Ihren anderen Bots.",
+  "Save name": "Namen speichern",
   "Save rule": "Regel speichern",
   "Save secret": "Geheimnis speichern",
   "Saving voice chat": "Sprachchat wird gespeichert",
   "Saving your conversation and preparing a summary…":
     "Ihre Unterhaltung wird gespeichert und eine Zusammenfassung vorbereitet …",
+  "Saving…": "Wird gespeichert …",
   "Say something to": "Schreiben Sie an",
   "Say something to {names}.": "Schreiben Sie an {names}.",
   Scheduled: "Geplant",
@@ -813,10 +821,13 @@ export const de: Record<string, string> = {
   "Waiting on you": "Wartet auf Sie",
   "We couldn't load your setup. Try again to continue.":
     "Ihre Einrichtung konnte nicht geladen werden. Versuchen Sie es erneut, um fortzufahren.",
+  Welcome: "Willkommen",
   "Welcome to {name}": "Willkommen bei {name}",
   "What Isolated means": "Was „Isoliert“ bedeutet",
   "What it can use": "Was er nutzen kann",
   "What it does": "Was er tut",
+  "What should we call you? You can change your name later in Settings.":
+    "Wie sollen wir Sie nennen? Sie können Ihren Namen später in den Einstellungen ändern.",
   "What to read": "Was gelesen werden soll",
   "What your Bots remember about you is in":
     "Was Ihre Bots über Sie wissen, finden Sie unter",
@@ -856,6 +867,7 @@ export const de: Record<string, string> = {
   "Your message wasn't sent. Try again.":
     "Ihre Nachricht wurde nicht gesendet. Versuchen Sie es erneut.",
   "Your microphone is muted": "Ihr Mikrofon ist stummgeschaltet",
+  "Your name has been saved.": "Ihr Name wurde gespeichert.",
   "Your own Bot": "Ihr eigener Bot",
   "Your routines could not be loaded.":
     "Ihre Routinen konnten nicht geladen werden.",

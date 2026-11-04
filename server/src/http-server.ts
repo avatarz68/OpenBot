@@ -8,7 +8,7 @@ import { browserRequestSeconds } from "./browser/routes";
 import { websocket as channelSocket } from "./channels/socket";
 import type { ComputerGateway } from "./computer/gateway";
 import { streamPathBotId } from "./computer/stream-path";
-import type { DeploymentConfig } from "./config";
+import { type DeploymentConfig, LOCAL_PLATFORM_GATEWAY_PATH } from "./config";
 import {
   CROSS_SITE_REFUSAL,
   crossSiteRequest,
@@ -30,6 +30,13 @@ import {
 type StreamData = {
   upstream: string;
   inward?: WebSocket;
+  /**
+   * Frames the browser sent before the inward socket opened, sent in order once it does. Only the
+   * embedded platform's gateway sets it: its first frame is the channel join, and dropping that
+   * leaves the browser waiting on a channel that was never joined. The live screen drops them, as
+   * its comment below explains.
+   */
+  pending?: string[];
 };
 
 /**
@@ -208,6 +215,22 @@ export function startHttpServer(deps: {
         }
         return new Response("Expected a WebSocket upgrade.", { status: 400 });
       }
+      /*
+       * The embedded platform's browser socket, relayed. The platform listens on loopback, so on a
+       * deployment the browser can only reach it through this server. Its own join token is the
+       * credential, so there is no session check here; the cross-site check above already applies.
+       */
+      if (
+        config.runtime.localPlatform &&
+        url.pathname === `${LOCAL_PLATFORM_GATEWAY_PATH}/websocket` &&
+        isWebSocketUpgrade(request.headers)
+      ) {
+        const upstream = `ws://127.0.0.1:${config.runtime.localPlatform.port}/client/websocket${url.search}`;
+        if (server.upgrade(request, { data: { upstream, pending: [] } })) {
+          return undefined as unknown as Response;
+        }
+        return new Response("Expected a WebSocket upgrade.", { status: 400 });
+      }
       return app.fetch(request, { server, caller });
     },
     websocket: {
@@ -219,6 +242,10 @@ export function startHttpServer(deps: {
         const stream = ws.data;
         const inward = new WebSocket(stream.upstream);
         stream.inward = inward;
+        inward.onopen = () => {
+          for (const frame of stream.pending?.splice(0) ?? [])
+            inward.send(frame);
+        };
         // Frames outward, input inward. Buffered by neither side: a frame the browser is too slow for
         // should be dropped, not queued, because a stale frame is worse than a missing one.
         inward.onmessage = (event) => {
@@ -237,6 +264,7 @@ export function startHttpServer(deps: {
           return;
         }
         if (ws.data.inward?.readyState === 1) ws.data.inward.send(String(raw));
+        else ws.data.pending?.push(String(raw));
       },
       close(ws, code, reason) {
         if (!isProxiedStream(ws.data)) {

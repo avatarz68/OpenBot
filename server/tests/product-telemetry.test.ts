@@ -22,6 +22,21 @@ test("self-host product export requires consent and every distribution honors op
   ).toBe(false);
 });
 
+test("the embedded platform sends nothing to CopilotKit, even when asked to", () => {
+  expect(
+    productExportEnabled({
+      INTELLIGENCE_MODE: "local",
+      OPENBOT_PRODUCT_TELEMETRY: "1",
+    }),
+  ).toBe(false);
+  expect(
+    productExportEnabled({
+      INTELLIGENCE_MODE: "local",
+      OPENBOT_DISTRIBUTION: "desktop",
+    }),
+  ).toBe(false);
+});
+
 test("pseudonyms are stable, deployment scoped, and never raw users", () => {
   const one = scopedProductUser(
     "salt-one",

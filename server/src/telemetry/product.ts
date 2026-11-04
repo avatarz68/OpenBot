@@ -79,6 +79,9 @@ export function productExportEnabled(
     )
   )
     return false;
+  // The embedded platform is the setup that involves no CopilotKit service, and that includes this
+  // sink. Not even an explicit opt-in sends anything from it.
+  if (env.INTELLIGENCE_MODE === "local") return false;
   if (env.OPENBOT_PRODUCT_TELEMETRY !== undefined)
     return (
       env.OPENBOT_PRODUCT_TELEMETRY === "1" ||

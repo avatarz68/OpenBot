@@ -1,56 +1,74 @@
-# Migration plan: ImPPPact without CopilotKit
+# ImPPPactBot ohne CopilotKit Intelligence
 
-Goal: run the platform with open-source parts only. Decisions so far:
+Dieses Dokument beschreibt, wie ImPPPactBot ohne das gehostete CopilotKit-Konto läuft, was dafür gebaut wurde und was bewusst fehlt. Der übrige Teil von `docs/` stammt vom Upstream-Projekt und geht noch von CopilotKit Intelligence aus.
 
-- Keep **AG-UI** (`@ag-ui/*`, open protocol). It is how Bots speak; it is not a CopilotKit service.
-- Replace **CopilotKit Intelligence** (threads, realtime gateway, memory, learning) with PostgreSQL, our own WebSocket/SSE layer and **Mem0** for memory.
-- Replace **`@copilotkit/runtime`** with our own Hono + AG-UI client layer.
-- Replace **`@copilotkit/react-core`** with **assistant-ui** (MIT) plus our own AG-UI hooks.
+## Ergebnis
 
-Status: analysis only. No application code has been changed yet.
+Mit `INTELLIGENCE_MODE=local` (Standard in `.env.example`) startet der Server ohne CopilotKit-Konto, Schlüssel oder Lizenz. Threads, Verlauf und Läufe liegen in der eigenen PostgreSQL-Datenbank. Es wird nichts an CopilotKit gesendet.
 
-## Where CopilotKit is used today
+Weiter genutzt werden die MIT-lizenzierten Pakete `@copilotkit/runtime` und `@copilotkit/react-core` (Chat-Oberfläche und Lauf-Steuerung) sowie das offene Protokoll AG-UI. Ersetzt ist nur der gehostete Dienst *Intelligence*.
 
-| Area | Files | What it does |
-| --- | --- | --- |
-| Intelligence client | `server/src/intelligence-client.ts`, `server/src/intelligence-entitlement-check.ts`, `server/src/self-host-banner.ts` | Account, entitlement, banner |
-| Turn runner and threads | `server/src/copilot.ts` (2.2k lines), `server/src/index.ts`, `toolkit/src/run-turn.ts` (restates runtime internals by hand), `toolkit/src/copilotkit/*`, `server/src/agents/handoff-*.ts` | Thread lifecycle, leases, runner over the realtime gateway |
-| Memory | `server/src/memory/intelligence.ts` (+ store, ingestion, routes) | Durable per-person memory and recall |
-| Learning | `server/src/learning/*` (about 2.5k lines) | Learned skills, containers, sharing |
-| Recorder, telemetry | `server/src/recorder/*`, `server/src/telemetry/product-boundaries.ts` | Runtime hooks |
-| Browser app | about 30 files importing `@copilotkit/react-core/v2` (`app/src/lib/copilot/*`, `app/src/components/channels/*`) | Chat, composer, attachments, frontend tools, human-in-the-loop, generative UI, A2UI |
-| Other | `extension/` (`@copilotkit/learning`), `desktop/src-tauri`, `scripts/` (setup-learning, Composio provisioning), `charts/`, `docs/` | Provisioning, patches, packaging |
+## Aufbau
 
-## Phases
+Die eingebaute Plattform (`server/src/local-platform/`) spricht dieselbe Schnittstelle wie Intelligence, deshalb läuft der übrige Code unverändert:
 
-Each phase must leave `bun run test` green and the product startable.
+| Teil | Aufgabe |
+| --- | --- |
+| `platform.ts` | REST unter `/api/threads` (anlegen, lesen, umbenennen, archivieren, löschen, Nachrichtenverlauf, Sperre, Zugangsdaten für Browser), `/runner/websocket` für den Lauf, `/client/websocket` für Browser |
+| `store.ts`, `postgres-store.ts` | Zustand: Arbeitsspeicher (Tests) oder PostgreSQL (Tabellen `local_threads`, `local_thread_events`, `local_thread_locks`) |
+| `fold.ts` | setzt den Nachrichtenverlauf aus dem Ereignisprotokoll eines Threads zusammen |
+| `serve.ts` | startet die Plattform beim Serverstart auf `127.0.0.1:LOCAL_PLATFORM_PORT` (Standard 4390) |
+| `http-server.ts` | leitet Browser-Sockets unter `/api/local-platform/client/websocket` an die Plattform weiter |
 
-1. **Seams.** Define ports in `toolkit/src/ports.ts` style for `ThreadStore`, `TurnRunner`, `MemoryStore`, `LearningStore`. Make existing code depend on the ports, with the CopilotKit implementation as the first adapter. No behaviour change.
-2. **Postgres thread store and runner.** Threads, messages, leases and run state in PostgreSQL; own streaming transport to the browser (SSE first). Replaces the realtime gateway. This is the largest step.
-3. **Mem0 memory adapter.** Self-hosted Mem0 on Postgres with pgvector. Keep the existing OpenBot-side rows for what Mem0 has no field for (paused, source, visibility); map as `memory/intelligence.ts` does today.
-4. **Learning.** Either port learned skills to Postgres or remove the feature behind a flag. Decide after phase 2.
-5. **Frontend.** Replace `CopilotProvider`, `CopilotChat`, `useAgent`, `useFrontendTool`, `useHumanInTheLoop`, `useRenderTool` and the generative-UI/A2UI renderers with assistant-ui and thin AG-UI hooks. Port approval tools and sandboxed tools first, they carry the governance.
-6. **Cleanup.** Remove the packages, the `@copilotkit/learning` patch, `setup-learning`, Composio provisioning via the CopilotKit CLI, CopilotKit telemetry and banner, then rewrite `.env.example`, charts and docs.
+Ablauf einer Nachricht: Der Browser startet über die Laufzeit einen Lauf. Die Laufzeit sperrt den Thread, verbindet sich als Runner mit der Plattform und schickt die Ereignisse des Bots (AG-UI). Die Plattform speichert sie und verteilt sie live an den Browser. Beim Neuladen oder nach einem Neustart setzt der Browser mit der zuletzt gesehenen Ereignis-ID fort, und die Plattform spielt nur das Fehlende nach. Der Stopp-Knopf erreicht den Runner über den offenen Kanal. Endet ein Lauf, egal wie, gibt die Plattform die Sperre frei.
 
-## Risks
+## Konfiguration
 
-- `toolkit/src/run-turn.ts` and `history-sanitize.ts` mirror runtime internals line by line. Behaviour that is only implicit today (resume entries, tool-result ordering, stall and watchdog handling) needs its own tests before it is replaced.
-- About 100 tests mention CopilotKit; many use recorded Intelligence traffic fixtures.
-- Upstream updates from the original project become hard to merge after phase 2.
-- Phase 1 should be reviewed before anything else is built on it.
+| Variable | Bedeutung |
+| --- | --- |
+| `INTELLIGENCE_MODE=local` | schaltet die eingebaute Plattform ein |
+| `LOCAL_PLATFORM_PORT` | Port auf Loopback, Standard 4390 |
+| `OPENBOT_PUBLIC_URL` | öffentliche Adresse. Browser verbinden sich dann über `<Adresse>/api/local-platform/client`. Ohne sie wird `127.0.0.1` genommen, was nur auf derselben Maschine geht |
+| `INTELLIGENCE_BROWSER_GATEWAY_WS_URL` | überschreibt die Browser-Adresse |
 
-## Revised approach (after reading the SDK)
+Die gehosteten Einstellungen (`INTELLIGENCE_API_URL`, `INTELLIGENCE_GATEWAY_WS_URL`, `CPK_INTELLIGENCE_API_KEY`) sind in `.env.example` auskommentiert. Sie gelten nur, wenn `INTELLIGENCE_MODE` nicht `local` ist.
 
-`@copilotkit/runtime` and `@copilotkit/react-core` are MIT-licensed, so they stay. Only the hosted
-Intelligence service is replaced, by an **embedded local platform** in `server/src/local-platform/`
-that speaks the same wire format (REST under `/api/threads` plus the Phoenix WebSocket for
-`ingestion:<runId>` and `thread:<id>`). OpenBot's own code then needs no second code path.
+## Sicherheit
 
-Done: in-memory `ThreadStore`, message history folded from the event log, thread lock, runner
-WebSocket, no entitlements (memory stays in OpenBot's database). Tested with the real
-`CopilotKitIntelligence` client (`server/tests/local-platform.test.ts`).
+- Die Plattform lauscht nur auf Loopback. Der Runner-Zugang weist Verbindungen ab, die über einen Proxy kamen (`x-forwarded-for`) oder nicht von Loopback stammen.
+- Browser brauchen ein signiertes Token, das auf einen Thread und eine Person lautet und 12 Stunden gilt. Gefälschte oder fremde Token werden abgewiesen.
+- Die Weiterleitung im Server prüft wie jeder Socket die Herkunft (`TRUSTED_ORIGINS`). Das Token der Plattform ist ihr Berechtigungsnachweis.
+- Produkt-Telemetrie ist im lokalen Modus aus, auch bei ausdrücklichem Opt-in. Die Telemetrie der CopilotKit-Laufzeit ist ebenfalls abgeschaltet.
 
-Open: PostgreSQL `ThreadStore`; mount in `server/src/index.ts` with `INTELLIGENCE_MODE=local`
-(config must stop demanding the three Intelligence settings); browser gateway for the live
-`CopilotChat` connection; learning and trajectories switched off cleanly; an end-to-end run with a
-mock model; the Mem0 decision is dropped because OpenBot already keeps memory itself.
+## Was es im lokalen Modus nicht gibt
+
+- **Automatisches Learning, Trajectories und gelernte Fähigkeiten.** Sie hängen an Intelligence.
+- **Gedächtnis in Intelligence.** Das Gedächtnis liegt in OpenBots eigener Datenbank. Die Plattform meldet eine aktive Lizenz ohne Funktionen, damit die Oberfläche keine Lizenzhinweise zeigt und das Gedächtnis lokal bleibt.
+- **Echtzeit-Aktualisierung der Thread-Liste** in einem zweiten Fenster. Die Liste wird beim Laden über REST gelesen.
+- **Die Inspector-Ansicht** der Laufzeit.
+
+## Verbleibende CopilotKit-Bezüge
+
+- Die Pakete `@copilotkit/runtime`, `@copilotkit/react-core`, `@copilotkit/shared` (MIT) und `@copilotkit/aimock` (nur Tests). `@copilotkit/learning` steckt nur in der Browser-Erweiterung.
+- Der Code für den gehosteten Modus bleibt erhalten, damit Upstream-Änderungen übernehmbar bleiben. Er ist ohne `INTELLIGENCE_MODE=local` aktiv.
+- `scripts/setup-composio.ts` und `scripts/setup-learning.ts` nutzen die CopilotKit-CLI. `scripts/start.sh` überspringt beide im lokalen Modus. Apps über Composio gehen dort mit einem eigenen `COMPOSIO_API_KEY`.
+- Das Self-Host-Banner und die Onboarding-Seite „Deploy it for your organization“ (mit Link zum CopilotKit-Vertrieb) sind im lokalen Modus ausgeblendet. Der Code dazu liegt weiter in `app/src/components/layout/self-host-banner.tsx`.
+- `README.openbot.md`, `docs/` und die Helm-Charts beschreiben den Upstream-Betrieb.
+
+## Tests
+
+```bash
+export TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/openbot_test
+bun test server/tests/local-platform.test.ts \
+  server/tests/local-platform-store.test.ts \
+  server/tests/local-platform-runtime.test.ts \
+  server/tests/local-platform-gateway.test.ts
+```
+
+`local-platform-runtime.test.ts` fährt die echte Laufzeit im lokalen Modus gegen die Plattform. `local-platform-gateway.test.ts` prüft die Weiterleitung für Browser, einschließlich des ersten Frames beim Verbindungsaufbau.
+
+## Noch nicht geprüft
+
+- Ein Durchlauf mit einem echten Sprachmodell.
+- Der Betrieb über Docker Compose und Helm mit `OPENBOT_PUBLIC_URL` hinter einem Reverse-Proxy. Die Weiterleitung ist getestet, ein Start mit Compose in dieser Sitzung nicht (kein Docker).
+- Mehrere Personen gleichzeitig.

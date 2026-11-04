@@ -47,6 +47,13 @@ export type RuntimeCapabilities = {
   localPlatform?: { port: number };
 };
 
+/**
+ * Where this server relays browser sockets to the embedded platform, which listens on loopback only.
+ * The runtime appends `/websocket` to the address a browser is given, so the front door answers
+ * `<this path>/websocket`.
+ */
+export const LOCAL_PLATFORM_GATEWAY_PATH = "/api/local-platform/client";
+
 /** The port the embedded local platform listens on unless `LOCAL_PLATFORM_PORT` says otherwise. */
 export const DEFAULT_LOCAL_PLATFORM_PORT = 4390;
 
@@ -1188,10 +1195,16 @@ function runtimeCapabilities(environment: Environment): RuntimeCapabilities {
     const port = portValue ? Number(portValue) : DEFAULT_LOCAL_PLATFORM_PORT;
     if (!Number.isInteger(port) || port < 1 || port > 65535)
       throw new Error("LOCAL_PLATFORM_PORT must be a port number");
-    const browserGatewayWsUrl = url(
-      environment,
-      "INTELLIGENCE_BROWSER_GATEWAY_WS_URL",
-    );
+    // Where the browser reaches the platform. A deployment with a public address gets the front
+    // door's own path (see LOCAL_PLATFORM_GATEWAY_PATH), because the platform itself listens on
+    // loopback and a browser on another machine cannot. Without one, the browser is on this
+    // machine too and the loopback address is right.
+    const publicUrl = optional(environment, "OPENBOT_PUBLIC_URL");
+    const browserGatewayWsUrl =
+      url(environment, "INTELLIGENCE_BROWSER_GATEWAY_WS_URL") ??
+      (publicUrl
+        ? `${publicUrl.replace(/\/+$/, "").replace(/^http/, "ws")}${LOCAL_PLATFORM_GATEWAY_PATH}`
+        : undefined);
     return {
       mode: "intelligence",
       durableHistory: true,

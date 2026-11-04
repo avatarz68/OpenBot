@@ -1,3 +1,5 @@
+> **ImPPPactBot:** Diese Dokumente stammen vom Upstream-Projekt OpenBot und gehen von *CopilotKit Intelligence* aus. ImPPPactBot läuft stattdessen mit einer eingebauten Plattform (`INTELLIGENCE_MODE=local`), siehe [migration-off-copilotkit.md](migration-off-copilotkit.md). Wo hier Intelligence steht, gilt das nur im gehosteten Modus.
+
 # OpenBot docs
 
 Start with the root [README](../README.md), then use these references:

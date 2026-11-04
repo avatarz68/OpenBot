@@ -271,7 +271,7 @@ function Introduction({ localEvaluation }: { localEvaluation: boolean }) {
   return (
     <IntroAnimation
       scenes={[
-        { id: "welcome", label: "Welcome", content: <WelcomeStep /> },
+        { id: "welcome", label: t("Welcome"), content: <WelcomeStep /> },
         {
           id: "computer",
           label: t("Each Bot has its own browser and files"),
@@ -338,6 +338,11 @@ function RouteComponent() {
     isFetching: loadingCapabilities,
   } = useQuery(deploymentCapabilitiesQueryOptions());
   const localEvaluation = capabilities?.localEvaluation === true;
+  // The page about deploying OpenBot for an organization ends in a link to CopilotKit's sales team.
+  // A deployment that has switched the self-host banner off, as the embedded platform does, is the
+  // organization's own, and has no use for it.
+  const showOrganization =
+    localEvaluation && capabilities?.selfHostBanner !== false;
   const last = step === "name";
 
   const go = (to: typeof step, forward: boolean) => {
@@ -428,7 +433,7 @@ function RouteComponent() {
                     disabled={complete.isPending || !capabilities}
                     onClick={() =>
                       go(
-                        step === "intro" && localEvaluation
+                        step === "intro" && showOrganization
                           ? "organization"
                           : "name",
                         true,
@@ -445,7 +450,7 @@ function RouteComponent() {
                     disabled={complete.isPending}
                     onClick={() =>
                       go(
-                        step === "name" && localEvaluation
+                        step === "name" && showOrganization
                           ? "organization"
                           : "intro",
                         false,

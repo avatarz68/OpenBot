@@ -246,7 +246,11 @@ if [[ "${COMPOSIO_API_KEY:-}" != *[![:space:]]* ]]; then
   unset COMPOSIO_API_KEY
 fi
 COMPOSIO_BEFORE="$(setting COMPOSIO_API_KEY "")"
-if COMPOSIO_LINE="$(bun scripts/setup-composio.ts 2>&1 | tail -1)"; then
+if [ "$(setting INTELLIGENCE_MODE "")" = "local" ] && [ -z "$COMPOSIO_BEFORE" ]; then
+  # Provisioning goes through a CopilotKit sign-in, which a local deployment has none of. Not an
+  # error: Bots work without apps, and COMPOSIO_API_KEY in .env turns them on.
+  info "  Composio: not set up. Add COMPOSIO_API_KEY to .env to use apps."
+elif COMPOSIO_LINE="$(bun scripts/setup-composio.ts 2>&1 | tail -1)"; then
   info "  $COMPOSIO_LINE"
 else
   red "  Composio: apps are unavailable this run. ${COMPOSIO_LINE:-The Composio setup did not run.}"

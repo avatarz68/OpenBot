@@ -137,6 +137,11 @@ services:
       # already right. The picked harness's path, a model endpoint on the host, and Intelligence.
       PICKED_HARNESS_URL: ${PICKED_HARNESS_CONTAINER_URL:-${PICKED_HARNESS_URL:-}}
       OPENAI_BASE_URL: ${OPENAI_CONTAINER_BASE_URL:-${OPENAI_BASE_URL:-}}
+      # `local` runs the platform embedded in the server, with no CopilotKit service. The browser
+      # then reaches it through the server's own port, at `OPENBOT_PUBLIC_URL`'s address.
+      INTELLIGENCE_MODE: ${INTELLIGENCE_MODE:-}
+      LOCAL_PLATFORM_PORT: ${LOCAL_PLATFORM_PORT:-}
+      OPENBOT_PUBLIC_URL: ${OPENBOT_PUBLIC_URL:-}
       INTELLIGENCE_API_URL: ${INTELLIGENCE_CONTAINER_API_URL:-${INTELLIGENCE_API_URL:-}}
       INTELLIGENCE_GATEWAY_WS_URL: ${INTELLIGENCE_CONTAINER_GATEWAY_WS_URL:-${INTELLIGENCE_GATEWAY_WS_URL:-}}
       # The browser opens the gateway too, at the address the server gives it in `/info`, and the

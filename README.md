@@ -31,9 +31,9 @@ Upstream hängt an *CopilotKit Intelligence*, einem gehosteten Dienst für dauer
 - Das Gedächtnis liegt in OpenBots eigener Datenbank. Automatisches Learning, Trajectories und Echtzeit-Aktualisierung der Thread-Liste gibt es im lokalen Modus nicht.
 - Es wird nichts an CopilotKit gesendet (Telemetrie ist abgeschaltet).
 
-Eingeschaltet wird das mit `INTELLIGENCE_MODE=local`. Das ist in `.env.example` der Standard. Der Rest der Intelligence-Einstellungen wird dann ignoriert. Der Mitschnitt der Pläne steht in [docs/migration-off-copilotkit.md](docs/migration-off-copilotkit.md).
+Eingeschaltet wird das mit `INTELLIGENCE_MODE=local`. Das ist in `.env.example` der Standard. Der Rest der Intelligence-Einstellungen wird dann ignoriert. Aufbau, Konfiguration, Sicherheit und Grenzen stehen in [docs/migration-off-copilotkit.md](docs/migration-off-copilotkit.md).
 
-Die Plattform lauscht nur auf `127.0.0.1:4390` (`LOCAL_PLATFORM_PORT`). Der Zugang für Browser ist über signierte, auf Thread und Person begrenzte Token geschützt, der Zugang der Laufzeit nur von dieser Maschine aus. Erreicht ein Browser `127.0.0.1` dieser Maschine nicht (etwa hinter einem Reverse-Proxy), muss `INTELLIGENCE_BROWSER_GATEWAY_WS_URL` auf eine Adresse zeigen, die an diesen Port weiterleitet.
+Die Plattform lauscht nur auf `127.0.0.1:4390` (`LOCAL_PLATFORM_PORT`). Der Zugang für Browser ist über signierte, auf Thread und Person begrenzte Token geschützt, der Zugang der Laufzeit nur von dieser Maschine aus. Mit `OPENBOT_PUBLIC_URL` erreichen Browser auf anderen Rechnern die Plattform über den Server selbst (`/api/local-platform/client`), ohne zusätzlichen Port.
 
 ## Voraussetzungen
 
@@ -111,4 +111,4 @@ Noch nicht geprüft: ein echtes Sprachmodell, der Computer-Dienst der Bots (brau
 ## Weitere Dokumentation
 
 - [Architektur](docs/architecture.md), [Konfiguration](docs/configuration.md), [Bereitstellung](docs/deployment.md) (Upstream, teils noch auf CopilotKit Intelligence bezogen)
-- [Plan der CopilotKit-Ablösung](docs/migration-off-copilotkit.md)
+- [Betrieb ohne CopilotKit](docs/migration-off-copilotkit.md)
