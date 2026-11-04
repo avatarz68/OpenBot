@@ -119,3 +119,25 @@ test("a forged token is refused by the platform behind the relay", async () => {
   socket.close();
   expect(["closed", "refused"]).toContain(outcome);
 });
+
+test("a server that serves the app itself gives the browser a path on its own origin", () => {
+  const served = loadConfig(
+    testEnvironment({
+      INTELLIGENCE_MODE: "local",
+      APP_DIST_DIR: "/app/app/dist",
+      OPENBOT_PUBLIC_URL: "https://bots.example.com",
+    }),
+  );
+  expect(served.runtime.intelligence.browserGatewayWsUrl).toBe(
+    "/api/local-platform/client",
+  );
+  const named = loadConfig(
+    testEnvironment({
+      INTELLIGENCE_MODE: "local",
+      INTELLIGENCE_BROWSER_GATEWAY_WS_URL: "/gateway/client",
+    }),
+  );
+  expect(named.runtime.intelligence.browserGatewayWsUrl).toBe(
+    "/gateway/client",
+  );
+});

@@ -28,7 +28,8 @@ Ablauf einer Nachricht: Der Browser startet über die Laufzeit einen Lauf. Die L
 | --- | --- |
 | `INTELLIGENCE_MODE=local` | schaltet die eingebaute Plattform ein |
 | `LOCAL_PLATFORM_PORT` | Port auf Loopback, Standard 4390 |
-| `OPENBOT_PUBLIC_URL` | öffentliche Adresse. Browser verbinden sich dann über `<Adresse>/api/local-platform/client`. Ohne sie wird `127.0.0.1` genommen, was nur auf derselben Maschine geht |
+| `OPENBOT_PUBLIC_URL` | öffentliche Adresse. Browser verbinden sich dann über `<Adresse>/api/local-platform/client`. Ohne sie und ohne `APP_DIST_DIR` wird `127.0.0.1` genommen, was nur auf derselben Maschine geht |
+| `APP_DIST_DIR` | gesetzt, wenn der Server die App selbst ausliefert (so im Container-Image). Dann bekommt der Browser den Pfad `/api/local-platform/client` auf der eigenen Herkunft, unabhängig vom öffentlichen Namen |
 | `INTELLIGENCE_BROWSER_GATEWAY_WS_URL` | überschreibt die Browser-Adresse |
 
 Die gehosteten Einstellungen (`INTELLIGENCE_API_URL`, `INTELLIGENCE_GATEWAY_WS_URL`, `CPK_INTELLIGENCE_API_KEY`) sind in `.env.example` auskommentiert. Sie gelten nur, wenn `INTELLIGENCE_MODE` nicht `local` ist.
@@ -58,7 +59,9 @@ Die gehosteten Einstellungen (`INTELLIGENCE_API_URL`, `INTELLIGENCE_GATEWAY_WS_U
 ## Docker und Kubernetes
 
 - **Image:** Das Image baut die App mit dem Mandanten aus dem Build-Argument `TENANT_PACKAGE_DIR` (Standard `../examples/impppact`). Darin stecken Produktname und Standardsprache. Ein anderer Mandant: `--build-arg TENANT_PACKAGE_DIR=../examples/<name>`. Ein lokaler Produktions-Build mit dieser Einstellung enthält „ImPPPactBot“ und `defaultLocale: "de"`.
-- **Compose:** `docker-compose.yml` gibt `TENANT_PACKAGE_DIR` (Standard `impppact`), `INTELLIGENCE_MODE`, `LOCAL_PLATFORM_PORT` und `OPENBOT_PUBLIC_URL` an den Server weiter.
+- **Compose:** `docker-compose.yml` gibt `TENANT_PACKAGE_DIR` (Standard `impppact`), `INTELLIGENCE_MODE`, `LOCAL_PLATFORM_PORT` und `OPENBOT_PUBLIC_URL` an den Server weiter. Beide Dockerfiles (`Dockerfile` und `server/Dockerfile`, das Compose nutzt) kennen das Build-Argument `TENANT_PACKAGE_DIR`.
+- **Geprüft mit Docker:** `docker compose config` ist gültig und zeigt für den Server `INTELLIGENCE_MODE=local` und den Mandanten `impppact`. Der PostgreSQL-Container (`pgvector/pgvector:pg17`) nimmt alle 76 Migrationen an, einschließlich der Tabellen der eingebauten Plattform. Server und App gegen diesen Container: Chat, Stopp, Kanäle, Gedächtnis und Verlauf nach Neustart funktionieren. Ein Server, der die gebaute App selbst ausliefert (wie im Image), reicht mit Port 3001 allein: Titel „ImPPPactBot“, Sprache Deutsch, Chat über die weitergeleitete Verbindung.
+- **Nicht geprüft:** Das Server-Image selbst. Der Build scheitert in der Testumgebung beim `bun install` mit `SELF_SIGNED_CERT_IN_CHAIN`, weil deren Netz TLS abfängt und der Container dem Zertifikat nicht traut. Das ist ein Problem der Umgebung, nicht des Dockerfiles, das bis zu diesem Schritt fehlerfrei durchlief. Ebenso nicht gestartet: `agent-computer`, `supervisor` und die Beispiel-Bots. Hinweis: `docker-compose.yml` veröffentlicht Ports zusätzlich auf `[::1]`. Auf einem Rechner ohne IPv6 scheitert der Start deshalb mit „address family not supported“.
 - **Helm:** Der Standardmandant im Chart ist `impppact`. **Der lokale Modus ist im Chart noch nicht eingebaut.** `templates/validation.yaml` und `templates/secret.yaml` verlangen weiterhin `config.intelligence.*` und `secrets.intelligenceApiKey`, und die Umgebung des Servers kennt `INTELLIGENCE_MODE` nicht. Nötig ist: ein Wert `config.intelligence.mode`, die beiden Prüfungen nur ohne `local` und die Umgebungsvariable `INTELLIGENCE_MODE=local` im gemeinsamen Env-Block (`templates/_helpers.tpl`). Ich habe das nicht geändert, weil in der Sitzung kein `helm` zum Rendern und Prüfen zur Verfügung stand.
 
 ## Tests

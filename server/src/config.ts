@@ -1200,11 +1200,21 @@ function runtimeCapabilities(environment: Environment): RuntimeCapabilities {
     // loopback and a browser on another machine cannot. Without one, the browser is on this
     // machine too and the loopback address is right.
     const publicUrl = optional(environment, "OPENBOT_PUBLIC_URL");
-    const browserGatewayWsUrl =
-      url(environment, "INTELLIGENCE_BROWSER_GATEWAY_WS_URL") ??
-      (publicUrl
-        ? `${publicUrl.replace(/\/+$/, "").replace(/^http/, "ws")}${LOCAL_PLATFORM_GATEWAY_PATH}`
-        : undefined);
+    const explicitGateway = optional(
+      environment,
+      "INTELLIGENCE_BROWSER_GATEWAY_WS_URL",
+    );
+    // A path is the address on the page's own origin, which the browser's socket client resolves
+    // against where the page was loaded from. It is what a server that serves the app itself, as
+    // the container image does (`APP_DIST_DIR`), can always say without knowing its public name.
+    const browserGatewayWsUrl = explicitGateway?.startsWith("/")
+      ? explicitGateway
+      : (url(environment, "INTELLIGENCE_BROWSER_GATEWAY_WS_URL") ??
+        (optional(environment, "APP_DIST_DIR")
+          ? LOCAL_PLATFORM_GATEWAY_PATH
+          : publicUrl
+            ? `${publicUrl.replace(/\/+$/, "").replace(/^http/, "ws")}${LOCAL_PLATFORM_GATEWAY_PATH}`
+            : undefined));
     return {
       mode: "intelligence",
       durableHistory: true,

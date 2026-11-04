@@ -44,6 +44,11 @@ COPY toolkit toolkit
 # `server/src/tenant-package`, so the app cannot be built without it.
 COPY server server
 COPY examples examples
+# The product name and the default language the bundle carries come from the tenant package, and the
+# bundle is built here, once, so the package is named here. Override with
+# `--build-arg TENANT_PACKAGE_DIR=...` to build for another tenant.
+ARG TENANT_PACKAGE_DIR=../examples/impppact
+ENV TENANT_PACKAGE_DIR=${TENANT_PACKAGE_DIR}
 RUN bun run --cwd app build
 
 
