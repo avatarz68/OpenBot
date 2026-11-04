@@ -1,0 +1,26 @@
+channels:
+  - id: general-assistant
+    name: General Assistant
+    description: Ask for help with everyday work.
+    permitted_agents: [general-assistant]
+    allowed_groups: [all]
+  - id: ppp-transactions
+    name: PPP Transactions
+    description: Structure, assess and document public-private partnership transactions.
+    permitted_agents: [ppp-transaction-advisor, ppp-cashflow-analyst, funding-matcher, risk-analyst]
+    allowed_groups: [all]
+  - id: stakeholders-and-impact
+    name: Stakeholders & Impact
+    description: Map stakeholders, power and risk, environmental and social impact, grievance mechanisms.
+    permitted_agents: [stakeholder-mapper, esg-grievance-reviewer]
+    allowed_groups: [all]
+  - id: proposals
+    name: Proposals & Reports
+    description: Draft proposals, one-pagers and reports in the ImPPPact voice.
+    permitted_agents: [proposal-writer, knowledge]
+    allowed_groups: [all]
+  - id: company-knowledge
+    name: ImPPPact Knowledge
+    description: Find authorized answers from ImPPPact documents.
+    permitted_agents: [knowledge]
+    allowed_groups: [all]
