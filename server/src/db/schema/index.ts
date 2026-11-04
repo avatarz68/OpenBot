@@ -12,6 +12,7 @@ export * from "./demonstrations";
 export * from "./group";
 export * from "./identity";
 export * from "./learning";
+export * from "./local-platform";
 export * from "./lifecycle";
 export * from "./memory";
 export * from "./passwords";
