@@ -13,6 +13,7 @@ import {
   IconShieldCheck,
   IconUsers,
 } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
   Link,
@@ -32,6 +33,10 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Separator } from "@/components/ui/separator";
+import {
+  availableHere,
+  deploymentCapabilitiesQueryOptions,
+} from "@/lib/deployment/queries";
 import { t } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authed/admin/")({
@@ -113,7 +118,7 @@ const SECTIONS: {
         linkOptions: { to: "/admin/learning" },
       },
       {
-        title: "Check-ins",
+        title: t("Check-ins"),
         description: t(
           "Turn check-ins on or off, limit them, and see how often people start what Bots raise.",
         ),
@@ -181,6 +186,9 @@ const SECTIONS: {
 ];
 
 function RouteComponent() {
+  const { data: capabilities } = useQuery(deploymentCapabilitiesQueryOptions());
+  const visible = <T extends { linkOptions: { to?: string } }>(items: T[]) =>
+    items.filter((item) => availableHere(item.linkOptions.to, capabilities));
   return (
     <PageShell
       description={t(
@@ -195,7 +203,7 @@ function RouteComponent() {
           title={section.title}
         >
           <PageRows>
-            {section.items.map((item, index) => (
+            {visible(section.items).map((item, index) => (
               <StaggerItem index={index} key={item.title}>
                 {/*
                  * The whole row is the link, not a chevron somebody has to aim at: every row here
@@ -214,7 +222,7 @@ function RouteComponent() {
                   </ItemContent>
                   <IconChevronRight className="size-4 shrink-0 text-muted-foreground" />
                 </Item>
-                {index !== section.items.length - 1 && <Separator />}
+                {index !== visible(section.items).length - 1 && <Separator />}
               </StaggerItem>
             ))}
           </PageRows>

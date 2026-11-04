@@ -41,6 +41,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useBotNames } from "@/lib/agents/bot-names";
 import { agentListQueryOptions } from "@/lib/agents/queries";
+import { t } from "@/lib/i18n";
 import {
   grantPlugin,
   invalidatePlugins,
@@ -211,12 +212,15 @@ function RouteComponent() {
   if (plugins.data && !server) {
     return (
       <PageShell
-        backButton={{ label: "Plugins", linkProps: { to: "/admin/plugins" } }}
-        description="No app with that name is turned on."
+        backButton={{
+          label: t("Plugins"),
+          linkProps: { to: "/admin/plugins" },
+        }}
+        description={t("No app with that name is turned on.")}
         title={appTitle}
       >
-        <PageEmpty icon={IconPlugOff} title="This app is off">
-          Nothing to give a Bot here.
+        <PageEmpty icon={IconPlugOff} title={t("This app is off")}>
+          {t("Nothing to give a Bot here.")}
         </PageEmpty>
       </PageShell>
     );
@@ -232,11 +236,14 @@ function RouteComponent() {
   if (!server) {
     return (
       <PageShell
-        backButton={{ label: "Plugins", linkProps: { to: "/admin/plugins" } }}
-        title="Plugins"
+        backButton={{
+          label: t("Plugins"),
+          linkProps: { to: "/admin/plugins" },
+        }}
+        title={t("Plugins")}
       >
         <p className="mt-12 text-destructive text-sm" role="alert">
-          Couldn't load plugins. Reload the page.
+          {t("Couldn't load plugins. Reload the page.")}
         </p>
       </PageShell>
     );
@@ -258,11 +265,11 @@ function RouteComponent() {
     return (
       <PageShell
         backButton={back}
-        description="There is no Bot with that name."
-        title="Not a Bot"
+        description={t("There is no Bot with that name.")}
+        title={t("Not a Bot")}
       >
-        <PageEmpty icon={IconBolt} title="Bot not found">
-          It may have been deleted after you opened this page.
+        <PageEmpty icon={IconBolt} title={t("Bot not found")}>
+          {t("It may have been deleted after you opened this page.")}
         </PageEmpty>
       </PageShell>
     );
@@ -430,8 +437,8 @@ function RouteComponent() {
       <SkippedToolsNotice names={server.skippedTools ?? []} />
 
       {server.tools.length === 0 ? (
-        <PageEmpty icon={IconTool} title="No actions listed">
-          {server.lastError ?? "Refresh its tools to check again."}
+        <PageEmpty icon={IconTool} title={t("No actions listed")}>
+          {server.lastError ?? t("Refresh its tools to check again.")}
         </PageEmpty>
       ) : (
         <>
@@ -439,7 +446,7 @@ function RouteComponent() {
             aria-label={`Search ${appTitle} actions`}
             className="mt-6"
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search by action name"
+            placeholder={t("Search by action name")}
             value={search}
           />
 
@@ -468,7 +475,7 @@ function RouteComponent() {
                 {/* The one in flight, not the ones finished: a count starting at zero of forty reads as nothing happening. */}
                 {granting
                   ? `Granting ${Math.min(granting.done + 1, granting.total)} of ${granting.total}…`
-                  : "Turn on every read-only action"}
+                  : t("Turn on every read-only action")}
               </Button>
             </div>
           ) : null}
@@ -476,14 +483,14 @@ function RouteComponent() {
           <PageSection
             description={
               sharedSectionSentence("read", shared) ??
-              "These only read. Boundaries about writes don't apply to them."
+              t("These only read. Boundaries about writes don't apply to them.")
             }
-            title="Reads"
+            title={t("Reads")}
           >
             {reads.length === 0 ? (
               <PageEmpty
                 icon={needle ? IconSearch : IconListDetails}
-                title={needle ? "No matches" : "No read-only actions"}
+                title={needle ? t("No matches") : t("No read-only actions")}
               >
                 {needle
                   ? `Nothing that only reads matches "${search.trim()}".`
@@ -497,14 +504,18 @@ function RouteComponent() {
           <PageSection
             description={
               sharedSectionSentence("write", shared) ??
-              "These change something at the vendor. Boundaries about writes apply to them."
+              t(
+                "These change something at the vendor. Boundaries about writes apply to them.",
+              )
             }
-            title="Changes things"
+            title={t("Changes things")}
           >
             {writes.length === 0 ? (
               <PageEmpty
                 icon={needle ? IconSearch : IconListDetails}
-                title={needle ? "No matches" : "No actions that change things"}
+                title={
+                  needle ? t("No matches") : t("No actions that change things")
+                }
               >
                 {needle
                   ? `Nothing that changes things matches "${search.trim()}".`
@@ -551,7 +562,7 @@ function RouteComponent() {
                   size="sm"
                   variant="outline"
                 >
-                  Cancel
+                  {t("Cancel")}
                 </Button>
                 <Button
                   disabled={grantingShared}

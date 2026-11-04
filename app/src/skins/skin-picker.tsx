@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { appConfig } from "@/lib/generated/application-config";
+import { t } from "@/lib/i18n";
 import {
   saveSkinMutationOptions,
   useUserPreferences,
@@ -39,11 +40,12 @@ export function SkinPicker() {
     <>
       <Item size="sm">
         <ItemContent>
-          <ItemTitle>Skin</ItemTitle>
+          <ItemTitle>{t("Skin")}</ItemTitle>
           <ItemDescription>
-            Change how {appConfig.brand.productName} looks for you, on every
-            device. Every skin keeps everything {appConfig.brand.productName}{" "}
-            does.
+            {t(
+              "Change how {name} looks for you, on every device. Every skin keeps everything {name} does.",
+              { name: appConfig.brand.productName },
+            )}
           </ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -55,7 +57,7 @@ export function SkinPicker() {
               if (id && id !== skin) save.mutate(id);
             }}
           >
-            <SelectTrigger aria-label="Skin">
+            <SelectTrigger aria-label={t("Skin")}>
               <SelectValue>{SKINS[skin].name}</SelectValue>
             </SelectTrigger>
             {/* Wider than the trigger, so each skin's description has room to wrap. */}

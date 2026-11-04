@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { BrokerDirectory } from "@/components/plugins/broker-directory";
+import { t } from "@/lib/i18n";
 import { directoryRouteDecision } from "@/lib/plugins/provider-vocabulary";
 import { pluginsPageQueryOptions } from "@/lib/plugins/queries";
 
@@ -37,7 +38,7 @@ function RouteComponent() {
   if (plugins.isError) {
     return (
       <p className="m-4 text-destructive text-sm" role="alert">
-        Couldn't load the plugin settings. Reload the page.
+        {t("Couldn't load the plugin settings. Reload the page.")}
       </p>
     );
   }

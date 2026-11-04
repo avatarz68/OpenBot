@@ -14,6 +14,7 @@ import {
   IconSlash,
   IconUsers,
 } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, type LinkOptions } from "@tanstack/react-router";
 import type * as React from "react";
 import {
@@ -27,6 +28,10 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import {
+  availableHere,
+  deploymentCapabilitiesQueryOptions,
+} from "@/lib/deployment/queries";
 import { t } from "@/lib/i18n";
 
 const appLinkOptions = { to: "/" } satisfies LinkOptions;
@@ -137,6 +142,7 @@ const GROUPS: {
 export function AdminSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: capabilities } = useQuery(deploymentCapabilitiesQueryOptions());
   return (
     <Sidebar variant="inset" {...props}>
       {/*
@@ -189,22 +195,26 @@ export function AdminSidebar({
           <SidebarGroup key={group.label}>
             <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
             <SidebarMenu className="gap-px">
-              {group.items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    render={(props) => (
-                      <Link
-                        {...item.linkOptions}
-                        activeProps={{ className: "bg-foreground/5" }}
-                        {...props}
-                      >
-                        <item.icon className="mr-2 h-4 w-4" />
-                        {item.title}
-                      </Link>
-                    )}
-                  />
-                </SidebarMenuItem>
-              ))}
+              {group.items
+                .filter((item) =>
+                  availableHere(item.linkOptions.to as string, capabilities),
+                )
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      render={(props) => (
+                        <Link
+                          {...item.linkOptions}
+                          activeProps={{ className: "bg-foreground/5" }}
+                          {...props}
+                        >
+                          <item.icon className="mr-2 h-4 w-4" />
+                          {item.title}
+                        </Link>
+                      )}
+                    />
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroup>
         ))}

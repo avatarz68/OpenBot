@@ -8,6 +8,7 @@ import {
   IconSchool,
   IconSettings,
 } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, type LinkOptions } from "@tanstack/react-router";
 import type * as React from "react";
 import {
@@ -20,6 +21,10 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import {
+  availableHere,
+  deploymentCapabilitiesQueryOptions,
+} from "@/lib/deployment/queries";
 import { t } from "@/lib/i18n";
 
 const appLinkOptions = { to: "/" } satisfies LinkOptions;
@@ -84,6 +89,7 @@ export const SETTINGS_SIDEBAR_ITEMS: {
 export function SettingsSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: capabilities } = useQuery(deploymentCapabilitiesQueryOptions());
   return (
     <Sidebar variant="inset" {...props}>
       {/* Matched to the app sidebar's header, as Admin's is. See admin-sidebar.tsx. */}
@@ -108,7 +114,9 @@ export function SettingsSidebar({
          */}
         <SidebarGroup>
           <SidebarMenu className="gap-px">
-            {SETTINGS_SIDEBAR_ITEMS.map((option) => (
+            {SETTINGS_SIDEBAR_ITEMS.filter((option) =>
+              availableHere(option.linkOptions.to as string, capabilities),
+            ).map((option) => (
               <SidebarMenuItem key={option.title}>
                 <SidebarMenuButton
                   render={(props) => (

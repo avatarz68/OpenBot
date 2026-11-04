@@ -31,7 +31,30 @@ export type DeploymentCapabilities = {
   localEvaluation: boolean;
   transcription?: boolean;
   voice?: boolean;
+  /**
+   * Where conversations live: CopilotKit's hosted Intelligence, or the platform embedded in this
+   * server. The hosted-only screens (Automatic learning) are hidden on the embedded one.
+   */
+  platform?: "hosted" | "local";
 };
+
+/** Screens that only work with the hosted Intelligence service. */
+const NEEDS_HOSTED_INTELLIGENCE = new Set([
+  "/admin/learning",
+  "/settings/learning",
+]);
+
+/** Whether a screen can work on this deployment. Unknown means yes: the page says what is missing. */
+export function availableHere(
+  to: string | undefined,
+  capabilities: DeploymentCapabilities | undefined,
+): boolean {
+  return !(
+    capabilities?.platform === "local" &&
+    to !== undefined &&
+    NEEDS_HOSTED_INTELLIGENCE.has(to)
+  );
+}
 
 export const deploymentKeys = {
   all: ["deployment"] as const,
@@ -70,6 +93,7 @@ export function deploymentCapabilitiesQueryOptions() {
         localEvaluation?: boolean;
         transcription?: boolean;
         voice?: boolean;
+        platform?: string;
       };
 
       return {
@@ -78,6 +102,9 @@ export function deploymentCapabilitiesQueryOptions() {
         localEvaluation: body.localEvaluation === true,
         transcription: body.transcription === true,
         voice: body.voice === true,
+        ...(body.platform === "local" || body.platform === "hosted"
+          ? { platform: body.platform }
+          : {}),
       };
     },
   });
