@@ -12,13 +12,13 @@ Jeder Bot ist ein Kollege mit eigenem Kanal. Er antwortet in der Sprache der Anf
 
 | Bot | Aufgabe |
 | --- | --- |
-| PPP Transaction Advisor | Eine PPP-Transaktion Phase für Phase strukturieren und bewerten: Projektdefinition, Value for Money, Risikoverteilung, Vertragsstruktur, Vergabe, Financial Close |
-| Funding Matcher | Wiederaufbau- und Infrastrukturprojekte (etwa in der Ukraine) passenden Finanzierungsquellen zuordnen, mit veröffentlichten Kriterien samt Quelle und Datum |
-| Stakeholder Mapper | Stakeholder, Interessen, Einfluss und Belege abbilden, Annahmen getrennt ausweisen |
-| PPP Cashflow Analyst | Cashflow-Logik aufsetzen und prüfen: Capex, Opex, Entgelte, Schuldendienst, DSCR, Sensitivitäten |
-| ESG & Grievance Reviewer | Umwelt- und Sozialunterlagen und Beschwerdemechanismen gegen die geltenden Standards prüfen, Lücken benennen |
-| Proposal Writer | Angebote, One-Pager und Berichte im ImPPPact-Ton entwerfen, Lücken als Platzhalter markieren |
-| General Assistant, Knowledge | Alltagshilfe und Fragen zu ImPPPact-Dokumenten |
+| PPP-Transaktionsberater | Eine PPP-Transaktion Phase für Phase strukturieren und bewerten: Projektdefinition, Value for Money, Risikoverteilung, Vertragsstruktur, Vergabe, Financial Close |
+| Fördermittel-Matcher | Wiederaufbau- und Infrastrukturprojekte (etwa in der Ukraine) passenden Finanzierungsquellen zuordnen, mit veröffentlichten Kriterien samt Quelle und Datum |
+| Stakeholder-Mapper | Stakeholder, Interessen, Einfluss und Belege abbilden, Annahmen getrennt ausweisen |
+| PPP-Cashflow-Analyst | Cashflow-Logik aufsetzen und prüfen: Capex, Opex, Entgelte, Schuldendienst, DSCR, Sensitivitäten |
+| ESG- und Beschwerdeprüfer | Umwelt- und Sozialunterlagen und Beschwerdemechanismen gegen die geltenden Standards prüfen, Lücken benennen |
+| Angebotsschreiber | Angebote, One-Pager und Berichte im ImPPPact-Ton entwerfen, Lücken als Platzhalter markieren |
+| Allgemeiner Assistent, Wissen | Alltagshilfe und Fragen zu ImPPPact-Dokumenten |
 
 Die Definitionen liegen in `examples/impppact/agents/*.yaml`, die Kanäle in `examples/impppact/channels.yaml`, der Produktname in `examples/impppact/brand.yaml`. Einen Bot hinzuzufügen heißt, eine YAML-Datei in `agents/` anzulegen.
 

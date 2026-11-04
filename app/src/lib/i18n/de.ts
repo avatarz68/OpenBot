@@ -92,6 +92,7 @@ export const de: Record<string, string> = {
     "Es konnte nicht bestätigt werden, dass dieser Sprachchat gespeichert wurde.",
   "Couldn’t load voice chats. Reload the page.":
     "Sprachchats konnten nicht geladen werden. Laden Sie die Seite neu.",
+  "Create a new Bot": "Neuen Bot erstellen",
   "Customize OpenBot’s appearance and message display. Your skin and message settings apply to your account; the theme applies only to this browser.":
     "Passen Sie Aussehen und Nachrichtenanzeige an. Skin und Nachrichteneinstellungen gelten für Ihr Konto, das Farbschema nur für diesen Browser.",
   "Dark theme": "Dunkles Farbschema",
@@ -237,6 +238,7 @@ export const de: Record<string, string> = {
   "This attachment is unavailable.": "Dieser Anhang ist nicht verfügbar.",
   "This browser blocked the tab.": "Dieser Browser hat den Tab blockiert.",
   "This conversation": "Diese Unterhaltung",
+  "To:": "An:",
   "Transcribe and send": "Transkribieren und senden",
   "Transcript saved. A summary couldn’t be generated.":
     "Transkript gespeichert. Eine Zusammenfassung konnte nicht erstellt werden.",

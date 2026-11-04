@@ -2,8 +2,8 @@
 # surface never registers an endpoint that is unavailable by default.
 agents:
   - id: general-assistant
-    name: General Assistant
-    title: Everyday Work
+    name: Allgemeiner Assistent
+    title: Alltagsarbeit
     role_description: Help with everyday work at ImPPPact using clear, concise, and accurate answers. Answer in the language the person writes in; German is the default.
     avatar_seed: general-assistant
     type: built-in
@@ -21,8 +21,8 @@ agents:
       - bot-creator
       - skill-creator
   - id: knowledge
-    name: Knowledge
-    title: Company Knowledge
+    name: Wissen
+    title: ImPPPact-Wissen
     role_description: Help answer ImPPPact knowledge questions and cite sources when available.
     avatar_seed: knowledge
     type: built-in
@@ -62,8 +62,8 @@ agents:
   # be: an AG-UI endpoint in the registry. Names in dollar-brace form are read from the environment,
   # so the address belongs to the deployment. Replace it with your own service and nothing changes.
   - id: risk-analyst
-    name: Risk Analyst
-    title: "Project Risk"
+    name: Risikoanalyst
+    title: "Projektrisiken"
     role_description: Investigate project and counterparty risk, policies and control evidence.
     avatar_seed: risk-analyst
     type: remote-ag-ui

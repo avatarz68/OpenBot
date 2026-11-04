@@ -43,7 +43,7 @@ export function RecipientField({
   return (
     <div className="border-b border-border px-4 py-2">
       <div className="mx-auto flex w-full max-w-2xl flex-wrap items-center gap-1.5">
-        <span className="text-sm text-muted-foreground">To:</span>
+        <span className="text-sm text-muted-foreground">{t("To:")}</span>
 
         {recipients.map((recipient) => (
           <Button

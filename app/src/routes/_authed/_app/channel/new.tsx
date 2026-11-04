@@ -132,7 +132,7 @@ function RouteComponent() {
         data-slot="conversation-header"
       >
         <SidebarToggle className="mr-1" />
-        <span className="text-sm text-muted-foreground">To:</span>
+        <span className="text-sm text-muted-foreground">{t("To:")}</span>
         <Combobox
           // Do not auto-open when the recipient came from the URL; the field is already answered.
           open={pickerOpen ?? (!chosen && !loadError && !waitingForUrlAgent)}
@@ -199,8 +199,10 @@ function RouteComponent() {
                 }}
               >
                 <AgentOrb size="24px" state="idle" />
-                <span className="font-medium">New Bot</span>
-                <span className="text-muted-foreground">Create a new Bot</span>
+                <span className="font-medium">{t("New Bot")}</span>
+                <span className="text-muted-foreground">
+                  {t("Create a new Bot")}
+                </span>
               </button>
             </div>
             <ComboboxEmpty>{t("No Bots found.")}</ComboboxEmpty>
